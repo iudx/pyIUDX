@@ -22,4 +22,4 @@ print(cat.getResourceItem("rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/p
 
 ## Authors
 * Mukunth A
-* Jishnu P
+* [Jishnu P](https://jishnujayakumar.github.io)
