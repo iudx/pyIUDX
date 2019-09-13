@@ -3,8 +3,6 @@ import urllib3
 import sys
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-
-
 class Catalogue():
     def __init__(self):
        self._catDomain=None
@@ -35,12 +33,10 @@ class Catalogue():
        return(count.json())
     
     def getResourceItem(self):
-	url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/search"+"?attribute-filter="+"("+attributeFilter[0]+","+attributeFilter[1]+")"
-	filteredItems = requests.get(url, verify=False)
-	return(filteredItems.json())
+        url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/search"+"?attribute-filter="+"("+attributeFilter[0]+","+attributeFilter[1]+")"
+        filteredItems = requests.get(url, verify=False)
+        return(filteredItems.json())
 
-
-    
 class Auth():
     def __init__(self):
        self._authDomain = None 
