@@ -16,7 +16,7 @@ class Catalogue():
        print(self._catPort)
        print(self._catVersion)
     
-    def connectToCat(self), catDomain, catPort, catVersion):
+    def connectToCat(self, catDomain, catPort, catVersion):
        self._catDomain=catDomain
        self._catPort=catPort
        self._catVersion=catVersion
@@ -56,6 +56,6 @@ class Auth():
        self._authDomain = authDomain 
        self._authPort = authPort 
        self._authVersion = authVersion
-       url = self._authDomain+":"+self._authPort+"/catalogue"+"/v"+self._authVersion+"/search"
+       url = self._authDomain+":"+self._authPort+"/auth"+"/v"+self._authVersion
        connect = requests.get(url, verify=False)
        return(connect.status_code)
