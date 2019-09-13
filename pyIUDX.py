@@ -32,8 +32,8 @@ class Catalogue():
        count = requests.get(url, verify=False)
        return(count.json())
     
-    def getResourceItem(self):
-        url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/search"+"?attribute-filter="+"("+attributeFilter[0]+","+attributeFilter[1]+")"
+    def getResourceItem(self, resourceId):
+        url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/items"+"/"+resourceId
         filteredItems = requests.get(url, verify=False)
         return(filteredItems.json())
 
