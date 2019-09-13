@@ -22,20 +22,34 @@ class Catalogue():
        connect = requests.get(url, verify=False)
        return(connect.status_code)
     
+    def get_url(self):
+	return self._catDomain + ":" + self._catPort + "/catalogue" + "/v" + self._catVersion
+
     def getAllItems(self):
-       url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/search"
+       url = self.get_url() + "/search"
        items = requests.get(url, verify=False)
        return(items.json())
 
     def getItemCount(self):
-       url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/count"
+       url = self.get_url() + "/count"
        count = requests.get(url, verify=False)
        return(count.json())
     
     def getResourceItem(self, resourceId):
-        url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/items"+"/"+resourceId
+        url = self.get_url() + "/items" + "/" + resourceId
         filteredItems = requests.get(url, verify=False)
         return(filteredItems.json())
+
+    def getResourceItemsFor(self, attribute_name, attribute_value):
+        url = self.get_url() + "/search?attribute-name=(" + attribute_name + ")&attribute-value=(" + attribute_value + ")"
+        filteredItems = requests.get(url, verify=False)
+        return(filteredItems.json())
+    
+    def getAllTags(self):
+	self.print_dev_msg();
+
+    def print_dev_msg(self):
+	print("Yet To be developed")
 
 class Auth():
     def __init__(self):
