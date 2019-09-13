@@ -23,7 +23,7 @@ class Catalogue():
        return(connect.status_code)
     
     def get_url(self):
-	return self._catDomain + ":" + self._catPort + "/catalogue" + "/v" + self._catVersion
+        return self._catDomain + ":" + self._catPort + "/catalogue" + "/v" + self._catVersion
 
     def getAllItems(self):
        url = self.get_url() + "/search"
@@ -46,10 +46,10 @@ class Catalogue():
         return(filteredItems.json())
     
     def getAllTags(self):
-	self.print_dev_msg();
+        self.print_dev_msg();
 
     def print_dev_msg(self):
-	print("Yet To be developed")
+        print("Yet To be developed")
 
 class Auth():
     def __init__(self):
