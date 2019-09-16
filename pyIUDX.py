@@ -18,6 +18,7 @@ class Catalogue():
        self._catDomain=catDomain
        self._catPort=catPort
        self._catVersion=catVersion
+       #url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/search"
        url = self._catDomain+":"+self._catPort+"/catalogue"+"/v"+self._catVersion+"/search"
        connect = requests.get(url, verify=False)
        return(connect.status_code)
@@ -45,6 +46,11 @@ class Catalogue():
         filteredItems = requests.get(url, verify=False)
         return(filteredItems.json())
     
+    def getItemsofTag(self, tag):
+        url = self.get_url() + "/search?attribute-name=(tags)&attribute-value=("+tag+")"
+        filteredItems = requests.get(url, verify=False)
+        return(filteredItems.json())
+	 
     def getAllTags(self):
         self.print_dev_msg();
 
@@ -69,3 +75,26 @@ class Auth():
        url = self._authDomain+":"+self._authPort+"/auth"+"/v"+self._authVersion
        connect = requests.get(url, verify=False)
        return(connect.status_code)
+
+
+class resourceServer():
+    def __init__(self):
+       self._serverDomain = None 
+       self._serverPort = None
+       self._serverVersion = None
+    
+    def dispParams(self):
+       print(self._serverDomain)
+       print(self._serverPort)
+       print(self._serverVersion)
+    
+    def getLatestData(self, serverDomain, serverPort, serverVersion, resource):
+       self._serverDomain = serverDomain 
+       self._serverPort = serverPort 
+       self._serverVersion = serverVersion
+       self._resource = resource
+       url = self._serverDomain+":"+self._serverPort+"/api/"+self._serverVersion+"/resource/latest/"+self._resource
+       latest = requests.get(url, verify=False)
+       return(latest.json())
+
+
