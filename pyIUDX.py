@@ -138,7 +138,7 @@ class Auth():
 		if group:
 			body['group'] = group
 
-		return self.call("group/delete",body)
+		return self.call("group/list",body)
 
 class resourceServer():
     def __init__(self):
