@@ -58,24 +58,87 @@ class Catalogue():
         print("Yet To be developed")
 
 class Auth():
-    def __init__(self):
-       self._authDomain = None 
-       self._authPort = None
-       self._authVersion = None
-    
-    def dispParams(self):
-       print(self._authDomain)
-       print(self._authPort)
-       print(self._authVersion)
-    
-    def connectToAuth(self, authDomain, authPort, authVersion):
-       self._authDomain = authDomain 
-       self._authPort = authPort 
-       self._authVersion = authVersion
-       url = self._authDomain+":"+self._authPort+"/auth"+"/v"+self._authVersion
-       connect = requests.get(url, verify=False)
-       return(connect.status_code)
+	def __init__(self, auth_server, certificate, key, auth_version= 1):
+		self.url		= "https://" + auth_server + "/auth"+"/v"+ str(auth_version)
+		self.credentials	= (certificate, key)
 
+	def call(self,api,body = None):
+
+		body = json.dumps(body)
+
+		if api == "acl":
+			connect = requests.get(self.url + "/" + api, cert = self.credentials, verify = True) 
+		else:
+			connect = requests.post(self.url + "/" + api, cert = self.credentials, verify = True, data = body, headers = {"content-type":"application/json"})
+
+		if connect.status_code != 200:
+			sys.stderr.write("Authentication failure : " + str(connect.status_code) + " : " + connect.text)
+			return None
+		else:
+			return json.loads(connect.text)
+
+	def get_token(self, request, token_time = None, existing_token = None):
+
+		body = {'request' : request}
+
+		if token_time:
+			body['token-time']	= token_time 
+		if existing_token:
+			body['existing-token']	= existing_token 
+
+		return self.call("token",body)
+
+	def get_policy(self):
+		return self.call("acl")
+
+	def set_policy(self,policy):
+		body = {'policy' : policy}
+		return self.call("acl/set",body)
+
+	def append_policy(self,policy):
+		body = {'policy' : policy}
+		return self.call("acl/append",body)
+
+	def introspect(self,token):
+		body = {'token' : token}
+		return self.call("introspect",body)
+
+	def revoke(self,tokens, token_hashes = None):
+
+		if token_hashes:
+			if type(token_hashes) == type('string'):
+				body = {'token-hashes' : [token_hashes]}
+			else:
+				assert (type(token_hashes) == type([])) # must be a list
+				body = {'token-hashes' : token_hashes }
+		else:
+			if type(tokens) == type('string'):
+				body = {'tokens' : [tokens]}
+			else:
+				assert (type(tokens) == type([])) # must be a list
+				body = {'tokens' : tokens }
+
+		return self.call("introspect",body)
+
+	def audit_tokens(self,hours):
+		body = {'hours': hours}
+		return self.call("audit/tokens",body)
+
+	def add_to_group (self,consumer,group):
+		body = {'consumer' : consumer, 'group' : group}
+		return self.call("group/add",body)
+
+	def delete_from_group (self,consumer,group):
+		body = {'consumer' : consumer, 'group' : group}
+		return self.call("group/delete",body)
+
+	def list_group (self,consumer,group = None):
+		body = {'consumer' : consumer}
+
+		if group:
+			body['group'] = group
+
+		return self.call("group/delete",body)
 
 class resourceServer():
     def __init__(self):
