@@ -101,11 +101,11 @@ class Auth():
 		body = {'policy' : policy}
 		return self.call("acl/append",body)
 
-	def introspect(self,token):
+	def introspect_token(self,token):
 		body = {'token' : token}
 		return self.call("introspect",body)
 
-	def revoke(self,tokens, token_hashes = None):
+	def revoke_token (self,tokens, token_hashes = None):
 
 		if token_hashes:
 
@@ -132,11 +132,11 @@ class Auth():
 		body = {'hours': hours}
 		return self.call("audit/tokens",body)
 
-	def add_to_group (self,consumer,group):
+	def add_consumer_to_group (self,consumer,group):
 		body = {'consumer' : consumer, 'group' : group}
 		return self.call("group/add",body)
 
-	def delete_from_group (self,consumer,group):
+	def delete_consumer_from_group (self,consumer,group):
 		body = {'consumer' : consumer, 'group' : group}
 		return self.call("group/delete",body)
 
