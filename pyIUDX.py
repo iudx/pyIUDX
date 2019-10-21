@@ -1,6 +1,8 @@
-import requests
-import urllib3
 import sys
+import json
+import urllib3
+import requests
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class Catalogue():
@@ -72,7 +74,7 @@ class Auth():
 			connect = requests.post(self.url + "/" + api, cert = self.credentials, verify = True, data = body, headers = {"content-type":"application/json"})
 
 		if connect.status_code != 200:
-			sys.stderr.write("Authentication failure : " + str(connect.status_code) + " : " + connect.text)
+			sys.stderr.write("Auth failure : " + str(connect.status_code) + " : " + connect.text)
 			return None
 		else:
 			return json.loads(connect.text)
@@ -106,12 +108,18 @@ class Auth():
 	def revoke(self,tokens, token_hashes = None):
 
 		if token_hashes:
+
+			assert (tokens == None) # either tokens or token-hashes must be provided, not both
+
 			if type(token_hashes) == type('string'):
 				body = {'token-hashes' : [token_hashes]}
 			else:
 				assert (type(token_hashes) == type([])) # must be a list
 				body = {'token-hashes' : token_hashes }
 		else:
+
+			assert (token_hashes == None) # either tokens or token-hashes must be provided, not both
+
 			if type(tokens) == type('string'):
 				body = {'tokens' : [tokens]}
 			else:
