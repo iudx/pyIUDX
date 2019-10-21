@@ -84,9 +84,9 @@ class Auth():
 		body = {'request' : request}
 
 		if token_time:
-			body['token-time']	= token_time 
+			body['token-time']	= token_time
 		if existing_token:
-			body['existing-token']	= existing_token 
+			body['existing-token']	= existing_token
 
 		return self.call("token",body)
 
@@ -101,8 +101,12 @@ class Auth():
 		body = {'policy' : policy}
 		return self.call("acl/append",body)
 
-	def introspect_token(self,token):
+	def introspect_token(self, token, server_token = None):
 		body = {'token' : token}
+
+		if server_token:
+			body['server-token'] = server_token
+
 		return self.call("introspect",body)
 
 	def revoke_token (self,tokens, token_hashes = None):
