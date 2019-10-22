@@ -60,8 +60,8 @@ class Catalogue():
         print("Yet To be developed")
 
 class Auth():
-	def __init__(self, auth_server, certificate, key, auth_version= 1):
-		self.url		= "https://" + auth_server + "/auth"+"/v"+ str(auth_version)
+	def __init__(self, auth_server, certificate, key, version = 1):
+		self.url		= "https://" + auth_server + "/auth"+"/v"+ str(version)
 		self.credentials	= (certificate, key)
 
 	def call(self,api,body = None):
@@ -74,7 +74,7 @@ class Auth():
 			connect = requests.post(self.url + "/" + api, cert = self.credentials, verify = True, data = body, headers = {"content-type":"application/json"})
 
 		if connect.status_code != 200:
-			sys.stderr.write("Auth failure : " + str(connect.status_code) + " : " + connect.text)
+			sys.stderr.write("Auth API failure | " + self.url + " | "  + connect.reason + " | " + connect.text)
 			return None
 		else:
 			return json.loads(connect.text)
