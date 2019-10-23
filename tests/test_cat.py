@@ -31,13 +31,38 @@ class CatTest(unittest.TestCase):
         filters = ["id"]
         items = self.catalogue.getManyResourceItems(attributes=attributes,
                                                     filters=filters)
+        count = self.catalogue.getItemCount(attributes=attributes)
         self.assertTrue(items)
+        self.assertTrue(count)
 
-    def test_get_many_geo(self):
+    def test_get_many_geo_polygon(self):
         geo = {"polygon": [[18.4, 73.9], [21.6, 78.9], [27.1, 80], [30, 75.25],
                            [25.7, 74.7], [18.4, 73.9]]}
         items = self.catalogue.getManyResourceItems(geo=geo)
+        count = self.catalogue.getItemCount(geo=geo)
         self.assertTrue(items)
+        self.assertTrue(count)
+
+    def test_get_many_geo_circle(self):
+        geo = {"circle": {"lat": 12.273737, "lon": 78.37475, "radius": 200000}}
+        items = self.catalogue.getManyResourceItems(geo=geo)
+        count = self.catalogue.getItemCount(geo=geo)
+        self.assertTrue(items)
+        self.assertTrue(count)
+
+    def test_get_many_geo_bbox(self):
+        geo = {"bbox": [[18.4, 73.9], [28.6, 80.2]]}
+        items = self.catalogue.getManyResourceItems(geo=geo)
+        count = self.catalogue.getItemCount(geo=geo)
+        self.assertTrue(items)
+        self.assertTrue(count)
+
+    def test_get_many_geo_line(self):
+        geo = {"line": [[18.4, 73.9], [28.6, 80.2]]}
+        items = self.catalogue.getManyResourceItems(geo=geo)
+        count = self.catalogue.getItemCount(geo=geo)
+        self.assertTrue(items)
+        self.assertTrue(count)
 
     def test_get_many_geo_attribute_filter(self):
         geo = {"polygon": [[18.4, 73.9], [21.6, 78.9], [27.1, 80], [30, 75.25],
@@ -46,7 +71,10 @@ class CatTest(unittest.TestCase):
         attributes = {"tags": ["aqi", "aqm"]}
         items = self.catalogue.getManyResourceItems(attributes=attributes,
                                                     filters=filters, geo=geo)
+        count = self.catalogue.getItemCount(attributes=attributes,
+                                            filters=filters, geo=geo)
         self.assertTrue(items)
+        self.assertTrue(count)
 
 
 if __name__ == '__main__':

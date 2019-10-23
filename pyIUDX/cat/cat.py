@@ -84,29 +84,43 @@ class Catalogue():
         if geo is not None:
             geoKeys = list(geo.keys())
             if len(geoKeys) is not 1:
-                raise RuntimeError("Multiple Geo Options")
+                raise RuntimeError("Multiple Geo Options not supported")
             geoKey = geoKeys[0]
-            if geoKey is "circle":
-                geoOpts = ("lat=" + str(geo[geoKey]["lat"]) + "&" +
-                           "lon=" + str(geo[geoKey]["lon"]) + "&" +
-                           "radius=" + str(geo[geoKey]["radius"]))
-            if geoKey is "polygon":
-                geoOpts = ("geometry=polygon(" +
-                           ",".join(str(g[0]) + "," + str(g[1])
-                                    for g in geo[geoKey]) + ")" +
-                           "&relation=within")
-            if geoKey is "bbox":
-                geoOpts = ("bbox=(" +
-                           ",".join(str(g[0]) + "," + str(g[1])
-                                    for g in geo[geoKey]) + ")")
-            if geoKey is "line":
-                geoOpts = ("geometry=linestring(" +
-                           ",".join(str(g[0]) + "," + str(g[1])
-                                    for g in geo[geoKey]) + ")")
 
-        opts = (attrOpts +
-                ("&" if attributes is not None else "") + filterOpts +
-                ("&" if filters is not None else "") + geoOpts)
+            try:
+                if geoKey is "circle":
+                    geoOpts = ("lat=" + str(geo[geoKey]["lat"]) + "&" +
+                               "lon=" + str(geo[geoKey]["lon"]) + "&" +
+                               "radius=" + str(geo[geoKey]["radius"]))
+
+                if geoKey is "polygon":
+                    if geo[geoKey][0] != geo[geoKey][-1]:
+                        raise RuntimeError("Last point not equal to first point")
+                    geoOpts = ("geometry=polygon(" +
+                               ",".join(str(g[0]) + "," + str(g[1])
+                                        for g in geo[geoKey]) + ")" +
+                               "&relation=within")
+
+                if geoKey is "bbox":
+                    if len(geo[geoKey]) != 2:
+                        raise RuntimeError("Two points needed for bbox query")
+                    geoOpts = ("bbox=" +
+                               ",".join(str(g[0]) + "," + str(g[1])
+                                        for g in geo[geoKey]) +
+                               "&relation=within")
+
+                if geoKey is "line":
+                    geoOpts = ("geometry=linestring(" +
+                               ",".join(str(g[0]) + "," + str(g[1])
+                                        for g in geo[geoKey]) + ")" +
+                               "&relation=intersects")
+
+                opts = (attrOpts +
+                        ("&" if attributes is not None else "") + filterOpts +
+                        ("&" if filters is not None else "") + geoOpts)
+
+            except Exception as e:
+                raise RuntimeError("Incorrect parameter given.\n", e)
 
         return opts
 
