@@ -51,7 +51,7 @@ class Catalogue():
         items = requests.get(url)
         return(items.json())
 
-    def makeOpts(self, attributes=None, filters=None):
+    def makeOpts(self, attributes=None, filters=None, geo=None):
         """ Make attributes options string
         Args:
             attributes (Dict): Array of key value pairs
@@ -68,6 +68,7 @@ class Catalogue():
         attrKeys = []
         attrValues = []
         filterOpts = ""
+        geoOpts = ""
         if attributes is not None:
             for attr in attributes.keys():
                 attrKeys.append(attr)
@@ -79,10 +80,37 @@ class Catalogue():
         if filters is not None:
             filterOpts = ("attribute-filter=" +
                           str(tuple(filters)).replace("\'", ""))
-        opts = attrOpts + ("&" if filterOpts is not None else "") + filterOpts
+
+        if geo is not None:
+            geoKeys = list(geo.keys())
+            if len(geoKeys) is not 1:
+                raise RuntimeError("Multiple Geo Options")
+            geoKey = geoKeys[0]
+            if geoKey is "circle":
+                geoOpts = ("lat=" + str(geo[geoKey]["lat"]) + "&" +
+                           "lon=" + str(geo[geoKey]["lon"]) + "&" +
+                           "radius=" + str(geo[geoKey]["radius"]))
+            if geoKey is "polygon":
+                geoOpts = ("geometry=polygon(" +
+                           ",".join(str(g[0]) + "," + str(g[1])
+                                    for g in geo[geoKey]) + ")" +
+                           "&relation=within")
+            if geoKey is "bbox":
+                geoOpts = ("bbox=(" +
+                           ",".join(str(g[0]) + "," + str(g[1])
+                                    for g in geo[geoKey]) + ")")
+            if geoKey is "line":
+                geoOpts = ("geometry=linestring(" +
+                           ",".join(str(g[0]) + "," + str(g[1])
+                                    for g in geo[geoKey]) + ")")
+
+        opts = (attrOpts +
+                ("&" if attributes is not None else "") + filterOpts +
+                ("&" if filters is not None else "") + geoOpts)
+
         return opts
 
-    def getItemCount(self, attributes=None, filters=None):
+    def getItemCount(self, attributes=None, filters=None, geo=None):
         """ Number of items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
@@ -95,7 +123,7 @@ class Catalogue():
             count (int): number of items or -1 if fail
         """
         url = self.getUrl() + "/count"
-        opts = self.makeOpts(attributes, filters)
+        opts = self.makeOpts(attributes, filters, geo)
         url = url + "?" + opts
         count = requests.get(url)
         if count.status_code is 200:
@@ -122,7 +150,7 @@ class Catalogue():
         else:
             return {}
 
-    def getManyResourceItems(self, attributes=None, filters=None):
+    def getManyResourceItems(self, attributes=None, filters=None, geo=None):
         """ Items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
@@ -135,7 +163,7 @@ class Catalogue():
             list (List[Dict]): List  of catalogue items (dicts)
         """
         url = self.getUrl() + "/search"
-        opts = self.makeOpts(attributes, filters)
+        opts = self.makeOpts(attributes, filters, geo)
         url = url + "?" + opts
         items = requests.get(url)
         if items.status_code is 200:
