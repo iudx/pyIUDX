@@ -92,13 +92,16 @@ class Catalogue():
                                      For e.x,
                                      ["id", "provider"]
         Returns:
-            count (int): number of items
+            count (int): number of items or -1 if fail
         """
         url = self.getUrl() + "/count"
         opts = self.makeOpts(attributes, filters)
         url = url + "?" + opts
-        count = int(requests.get(url).json()["Count"])
-        return count
+        count = requests.get(url)
+        if count.status_code is 200:
+            return count.json()["Count"]
+        else:
+            return -1
 
     def getOneResourceItem(self, id, filters=None):
         """ Item given the id
@@ -113,8 +116,11 @@ class Catalogue():
         url = self.getUrl() + "/items" + "/" + id
         opts = self.makeOpts(None, filters)
         url = url + "?" + opts
-        filteredItems = requests.get(url)
-        return filteredItems.json()
+        item = requests.get(url)
+        if item.status_code is 200:
+            return item.json()
+        else:
+            return {}
 
     def getManyResourceItems(self, attributes=None, filters=None):
         """ Items matching the criterion
@@ -131,6 +137,8 @@ class Catalogue():
         url = self.getUrl() + "/search"
         opts = self.makeOpts(attributes, filters)
         url = url + "?" + opts
-        print(url)
-        filteredItems = requests.get(url)
-        return filteredItems.json()
+        items = requests.get(url)
+        if items.status_code is 200:
+            return items.json()
+        else:
+            return []
