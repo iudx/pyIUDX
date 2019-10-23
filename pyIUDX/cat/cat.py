@@ -4,7 +4,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Catalogue():
-    def __init__(self, catDomain, catPort, catVersion=1):
+    def __init__(self, catDomain, catPort, catVersion="1"):
         """Catalogue base class constructor
         Args:
             catDomain (string): Domain name/ip of the catalogue server
@@ -19,8 +19,10 @@ class Catalogue():
         self._catDomain = catDomain
         self._catPort = catPort
         self._catVersion = catVersion
+
+    def checkConnection(self):
         url = (self._catDomain + ":" + self._catPort +
-               "/catalogue" + "/v" + self._catVersion + "/search")
+               "/catalogue" + "/v" + self._catVersion + "/count")
         connect = requests.get(url)
         if connect.status_code != 200:
             raise RuntimeError("Couldn't connect to catalogue server")
@@ -32,7 +34,7 @@ class Catalogue():
         """
         return self._catDomain, self._catPort, self._catVersion
 
-    def get_url(self):
+    def getUrl(self):
         """ Get catalogue constructed url
         Returns:
             url (string): catalogue constructed url
@@ -45,17 +47,16 @@ class Catalogue():
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        url = self.get_url() + "/search"
+        url = self.getUrl() + "/search"
         items = requests.get(url)
         return(items.json())
 
     def makeOpts(self, attributes=None, filters=None):
         """ Make attributes options string
         Args:
-            attributes (List[Dict]): Array of key value pairs
+            attributes (Dict): Array of key value pairs
                                      For e.x,
-                                     [{attribute_name: (string),
-                                       attribute_values: List(string)}]
+                                     {"tags": ["a", "b"], "provider": ["c"]}
             filters (List[str]): Array of strings as filter opts
                                      For e.x,
                                      ["id", "provider"]
@@ -68,51 +69,68 @@ class Catalogue():
         attrValues = []
         filterOpts = ""
         if attributes is not None:
-            for attr in attributes:
-                attrKeys.append(attr["attribute_name"])
-                attrValues.append(attr["attribute_values"])
+            for attr in attributes.keys():
+                attrKeys.append(attr)
+                attrValues.append(attributes[attr])
             attrOpts = ("attribute-name=(" + ",".join(a for a in attrKeys) + ")&" +
-                        "attribute-values=(" +
-                        "".join(str(tuple(a)).replace("\"", "") for a in attrValues))
+                        "attribute-value=(" +
+                        "".join(str(tuple(a)).replace("\'", "")
+                                for a in attrValues) + ")")
         if filters is not None:
-            filterOpts = "attribute-filter=" + str(tuple(filters))
-        opts = attrOpts + "&" + filterOpts
+            filterOpts = ("attribute-filter=" +
+                          str(tuple(filters)).replace("\'", ""))
+        opts = attrOpts + ("&" if filterOpts is not None else "") + filterOpts
         return opts
 
     def getItemCount(self, attributes=None, filters=None):
         """ Number of items matching the criterion
         Args:
-            attributes (List[Dict]): Array of key value pairs
+            attributes (Dict): Array of key value pairs
                                      For e.x,
-                                     [{attribute_name: (string),
-                                       attribute_values: List(string)}]
+                                     {"tags": ["a", "b"], "provider": ["c"]}
             filters (List[str]): Array of strings as filter opts
                                      For e.x,
                                      ["id", "provider"]
         Returns:
             count (int): number of items
         """
-        url = self.get_url() + "/count"
-        opts = self.makeOpts(url, attributes, filters)
+        url = self.getUrl() + "/count"
+        opts = self.makeOpts(attributes, filters)
         url = url + "?" + opts
-        count = int(requests.get(url)["Count"])
+        count = int(requests.get(url).json()["Count"])
         return count
 
-    def getResourceItem(self, resourceId, attributes=None, filters=None):
-        """ Items matching the criterion
+    def getOneResourceItem(self, id, filters=None):
+        """ Item given the id
         Args:
-            attributes (List[Dict]): Array of key value pairs
-                                     For e.x,
-                                     [{attribute_name: (string),
-                                       attribute_values: List(string)}]
+            id (string): ID of the resourceItem
             filters (List[str]): Array of strings as filter opts
                                      For e.x,
                                      ["id", "provider"]
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        url = self.get_url() + "/items" + "/" + resourceId
-        opts = self.makeOpts(url, attributes, filters)
+        url = self.getUrl() + "/items" + "/" + id
+        opts = self.makeOpts(None, filters)
         url = url + "?" + opts
+        filteredItems = requests.get(url)
+        return filteredItems.json()
+
+    def getManyResourceItems(self, attributes=None, filters=None):
+        """ Items matching the criterion
+        Args:
+            attributes (Dict): Array of key value pairs
+                                     For e.x,
+                                     {"tags": ["a", "b"], "provider": ["c"]}
+            filters (List[str]): Array of strings as filter opts
+                                     For e.x,
+                                     ["id", "provider"]
+        Returns:
+            list (List[Dict]): List  of catalogue items (dicts)
+        """
+        url = self.getUrl() + "/search"
+        opts = self.makeOpts(attributes, filters)
+        url = url + "?" + opts
+        print(url)
         filteredItems = requests.get(url)
         return filteredItems.json()
