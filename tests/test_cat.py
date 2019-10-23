@@ -33,6 +33,21 @@ class CatTest(unittest.TestCase):
                                                     filters=filters)
         self.assertTrue(items)
 
+    def test_get_many_geo(self):
+        geo = {"polygon": [[18.4, 73.9], [21.6, 78.9], [27.1, 80], [30, 75.25],
+                           [25.7, 74.7], [18.4, 73.9]]}
+        items = self.catalogue.getManyResourceItems(geo=geo)
+        self.assertTrue(items)
+
+    def test_get_many_geo_attribute_filter(self):
+        geo = {"polygon": [[18.4, 73.9], [21.6, 78.9], [27.1, 80], [30, 75.25],
+                           [25.7, 74.7], [18.4, 73.9]]}
+        filters = ["id"]
+        attributes = {"tags": ["aqi", "aqm"]}
+        items = self.catalogue.getManyResourceItems(attributes=attributes,
+                                                    filters=filters, geo=geo)
+        self.assertTrue(items)
+
 
 if __name__ == '__main__':
     unittest.main()
