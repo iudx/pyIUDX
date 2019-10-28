@@ -27,7 +27,7 @@ class CatTest(unittest.TestCase):
         self.assertTrue(item)
 
     def test_get_many_one_attr_one_filter(self):
-        attributes = {"tags": ["aqi", "aqm"]}
+        attributes = {"tags": ["safety"]}
         filters = ["id"]
         items = self.catalogue.getManyResourceItems(attributes=attributes,
                                                     filters=filters)
