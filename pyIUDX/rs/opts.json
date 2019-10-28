@@ -1,0 +1,85 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "describes": "schema for a generic options list for iudx compatible apis",
+    "version": "1.0.0",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "id of the resource-item",
+            "type": "string"
+        },
+        "time": {
+            "description": "date-time (iso8601) string. In case of duration, the two time instances are seperated by a forward slash (\"/\")",
+            "type": "string"
+        },
+        "TRelation": {
+            "description": "Time relationship between slash \"/\" seperated date-time string",
+            "enum": [
+                "during",
+                "before",
+                "after",
+                "TEquals"
+            ],
+            "type": "string"
+        },
+        "options": {
+            "description": "Option specifying the type of query. Can be any of\n[latest, status, stream, download]",
+            "enum": [
+                "latest",
+                "status",
+                "stream",
+                "download"
+            ],
+            "type": "string"
+        },
+        "lat": {
+            "description": "Latitude in case of geo-query",
+            "type": "number"
+        },
+        "lon": {
+            "description": "Longitude in case of geo-query",
+            "type": "number"
+        },
+        "radius": {
+            "description": "Radius in meters in case of a point-circle based geo-query",
+            "type": "number"
+        },
+        "attribute-filter": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "attribute-name": {
+            "description": "\tName of the attribute on which the operation should be applied",
+            "type": "string"
+        },
+        "attribute-value": {
+            "description": "Value for the attribute with which the operation should be applied",
+            "type": "string"
+        },
+        "comparison-operator": {
+            "description": "comparision type in case of attribute based query. can be one of\n[propertyisequalto, propertyisnotequalto, propertyislessthan, propertyisgreaterthan, propertyislessthanorequalto, propertyisgreaterthanorequalto, propertyislike, propertyisbetween]",
+            "enum": [
+                "propertyisequalto",
+                "propertyisnotequalto",
+                "propertyislessthan",
+                "propertyisgreaterthan",
+                "propertyislessthanorequalto",
+                "propertyisgreaterthanorequalto",
+                "propertyislike",
+                "propertyisbetween"
+            ],
+            "type": "string"
+        },
+        "api": {
+            "description": "API type for metrics api query",
+            "enum": [
+                "search",
+                "count",
+                "metrics"
+            ],
+            "type": "string"
+        }
+    }
+}
