@@ -3,6 +3,11 @@ import requests
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
+"""
+    TODO: Upload items
+"""
+
+
 class Catalogue():
     def __init__(self, catDomain, catPort, catVersion="1"):
         """Catalogue base class constructor
@@ -13,16 +18,15 @@ class Catalogue():
         Raises:
             RuntimeError: If catalogue server is not reachable
         """
-        self._catDomain = None
-        self._catPort = None
-        self._catVersion = None
-        self._catDomain = catDomain
-        self._catPort = catPort
-        self._catVersion = catVersion
+        self.catDomain = catDomain
+        self.catPort = catPort
+        self.catVersion = catVersion
+        self.catUrl = (self.catDomain + ":" + self.catPort +
+                       "/catalogue" + "/v" + self.catVersion)
 
     def checkConnection(self):
-        url = (self._catDomain + ":" + self._catPort +
-               "/catalogue" + "/v" + self._catVersion + "/count")
+        url = (self.catDomain + ":" + self.catPort +
+               "/catalogue" + "/v" + self.catVersion + "/count")
         connect = requests.get(url)
         if connect.status_code != 200:
             raise RuntimeError("Couldn't connect to catalogue server")
@@ -32,22 +36,14 @@ class Catalogue():
         Returns:
             (catDomain, catPort, catVersion) (string, string, string): version string
         """
-        return self._catDomain, self._catPort, self._catVersion
-
-    def getUrl(self):
-        """ Get catalogue constructed url
-        Returns:
-            url (string): catalogue constructed url
-        """
-        return (self._catDomain + ":" + self._catPort +
-                "/catalogue" + "/v" + self._catVersion)
+        return self.catDomain, self.catPort, self.catVersion
 
     def getAllItems(self):
         """ Get all catalogue items
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        url = self.getUrl() + "/search"
+        url = self.catUrl + "/search"
         items = requests.get(url)
         return(items.json())
 
@@ -136,7 +132,7 @@ class Catalogue():
         Returns:
             count (int): number of items or -1 if fail
         """
-        url = self.getUrl() + "/count"
+        url = self.catUrl + "/count"
         opts = self.makeOpts(attributes, filters, geo)
         url = url + "?" + opts
         count = requests.get(url)
@@ -155,7 +151,7 @@ class Catalogue():
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        url = self.getUrl() + "/items" + "/" + id
+        url = self.catUrl + "/items" + "/" + id
         opts = self.makeOpts(None, filters)
         url = url + "?" + opts
         item = requests.get(url)
@@ -176,7 +172,7 @@ class Catalogue():
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        url = self.getUrl() + "/search"
+        url = self.catUrl + "/search"
         opts = self.makeOpts(attributes, filters, geo)
         url = url + "?" + opts
         items = requests.get(url)
