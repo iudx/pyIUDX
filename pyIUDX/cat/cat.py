@@ -111,13 +111,12 @@ class Catalogue():
                                         for g in geo[geoKey]) + ")" +
                                "&relation=intersects")
 
-                opts = (attrOpts +
-                        ("&" if attributes is not None else "") + filterOpts +
-                        ("&" if filters is not None else "") + geoOpts)
-
             except Exception as e:
                 raise RuntimeError("Incorrect parameter given.\n", e)
 
+        opts = (attrOpts +
+                ("&" if attributes is not None else "") + filterOpts +
+                ("&" if filters is not None else "") + geoOpts)
         return opts
 
     def getItemCount(self, attributes=None, filters=None, geo=None):
