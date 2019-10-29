@@ -6,6 +6,10 @@
         "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/flood-sensor/Maharishi Shinde Bridge"
     ],
     "during": [
-
-    ],
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune Railway Station_28",
+            "startTime": "2019-10-18T00:00:00.000Z",
+            "endTime": "2019-10-19T00:00:00.000Z"
+        }
+    ]
 }

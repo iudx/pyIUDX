@@ -23,6 +23,15 @@ class RSTest(unittest.TestCase):
         latestArray = self.testVector["latest"]
         for item in latestArray:
             data = self.rs.getLatestData(item)
+            print(data)
+            input()
+            self.assertTrue(data)
+
+    def test_get_during(self):
+        duringArray = self.testVector["during"]
+        for item in duringArray:
+            data = self.rs.getDataDuring(item["id"],
+                                         item["startTime"], item["endTime"])
             self.assertTrue(data)
 
 

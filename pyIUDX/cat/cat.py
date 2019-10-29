@@ -9,34 +9,17 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Catalogue():
-    def __init__(self, catDomain, catPort, catVersion="1"):
+    def __init__(self, catUrl):
         """Catalogue base class constructor
         Args:
-            catDomain (string): Domain name/ip of the catalogue server
-            catPort (string): Catalogue server port
-            catVersion (string): catalogue version
-        Raises:
-            RuntimeError: If catalogue server is not reachable
+            catUrl (string): catalogue url
         """
-        self.catDomain = catDomain
-        self.catPort = catPort
-        self.catVersion = catVersion
-        self.catUrl = (self.catDomain + ":" + self.catPort +
-                       "/catalogue" + "/v" + self.catVersion)
+        self.catUrl = catUrl
 
     def checkConnection(self):
-        url = (self.catDomain + ":" + self.catPort +
-               "/catalogue" + "/v" + self.catVersion + "/count")
-        connect = requests.get(url)
+        connect = requests.get(self.catUrl)
         if connect.status_code != 200:
             raise RuntimeError("Couldn't connect to catalogue server")
-
-    def dispParams(self):
-        """ Display catalogue initalization parameter
-        Returns:
-            (catDomain, catPort, catVersion) (string, string, string): version string
-        """
-        return self.catDomain, self.catPort, self.catVersion
 
     def getAllItems(self):
         """ Get all catalogue items
@@ -148,14 +131,14 @@ class Catalogue():
                                      For e.x,
                                      ["id", "provider"]
         Returns:
-            list (List[Dict]): List  of catalogue items (dicts)
+            item (Dict): A catalogue items (dicts)
         """
         url = self.catUrl + "/items" + "/" + id
         opts = self.makeOpts(None, filters)
         url = url + "?" + opts
         item = requests.get(url)
         if item.status_code is 200:
-            return item.json()
+            return item.json()[0]
         else:
             return {}
 

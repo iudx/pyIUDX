@@ -12,7 +12,7 @@ class CatTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(CatTest, self).__init__(*args, **kwargs)
-        self.catalogue = cat.Catalogue("https://catalogue.iudx.org.in", "443")
+        self.catalogue = cat.Catalogue("https://catalogue.iudx.org.in/catalogue/v1")
 
     def test_get_count(self):
         attributes = {"tags": ["aqi", "aqm"]}
