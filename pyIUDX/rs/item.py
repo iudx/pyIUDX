@@ -119,7 +119,9 @@ class Item(object):
     def during(self, start, end):
         self.reset()
         data = self.rs.getDataDuring(self.riId, start, end)
+        rows = 0
         for row in data:
+            rows += 1
             timeAttr = list(set(self.timeAttributes).intersection(set(row.keys())))[0]
             timestamp = row[timeAttr]
             for k in row.keys():
@@ -127,7 +129,7 @@ class Item(object):
                     try:
                         getattr(self, k).setValue(timestamp, float(row[k]))
                     except Exception as e:
-                        return None
+                        pass
         return self
 
 

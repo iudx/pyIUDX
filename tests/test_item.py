@@ -22,9 +22,10 @@ print(aqm.CO2_MIN.attributes)
 """ Get latest data for aqm and print Humidity """
 print(aqm.latest().HUMIDITY.value)
 """ Print latest CO2_MAX value, latest() was already done """
-# print(aqm.CO2_MAX.value)
 
 """ Get data during time period for that aqm device """
+input()
 aqm.during("2019-10-18T00:00:00.000Z", "2019-10-19T00:00:00.000Z")
+print(aqm.CO2_MAX.value)
 """ Print its values, numpy array """
 # print(aqm.CO2_MAX.value)
