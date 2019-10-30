@@ -16,10 +16,10 @@ class ResourceServer():
         """
         self.rsUrl = rsUrl
 
-        opts_file = pkg_resources.resource_filename("pyIUDX", "rs/opts.json")
-        """ TODO: see if import works when on pip """
-        with open(opts_file, "r") as f:
-            self.optsSchema = json.load(f)
+        # opts_file = pkg_resources.resource_filename("pyIUDX", "rs/opts.json")
+        # """ TODO: see if import works when on pip """
+        # with open(opts_file, "r") as f:
+        #     self.optsSchema = json.load(f)
 
     def dispParams(self):
         """ Display rs initalization parameter
