@@ -1,9 +1,6 @@
 import sys
 import json
-import urllib3
 import requests
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Auth():

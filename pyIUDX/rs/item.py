@@ -1,20 +1,25 @@
+from multiprocessing import Pool, Manager
+from collections import MutableSequence
 from pyIUDX.rs import rs
 from pyIUDX.cat import cat
+from pyIUDX.auth import auth
 import numpy as np
-import urllib3
 import requests
 import copy
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 
 """ TODO: FIx numpy datetime issue """
 """ TODO: Multiprocessing """
 """ TODO: GeoAttributes coming in data """
 """ TODO: Read base schemas locally """
+""" TODO: Remove cat url in Item() """
+""" TODO: Error in case data is not coming """
 
 
 class QuantitativeProperty(object):
-    def __init__(self, properties):
+    def __init__(self, obj, name, properties):
+        self.name = name
         self.value = np.empty((0, 2), dtype=object)
         for p in properties.keys():
             setattr(self, p, properties[p])
@@ -22,13 +27,24 @@ class QuantitativeProperty(object):
         self.attributes.pop("$ref", None)
         self.attributes.pop("value", None)
         self.attributes.pop("attributes", None)
+        self.parent = obj
 
     def reset(self):
         self.value = np.empty((0, 2), dtype=object)
+        return
 
     def setValue(self, time, value):
         self.value = np.append(self.value,
                                np.array([[time, value]], dtype=object), axis=0)
+        return
+
+    def latest(self):
+        self.parent.latest()
+        return self.value
+
+    def valueBetween(self, minval, maxVal):
+        self.parent.valueBetween(self.name, minval, maxVal)
+        return self.value
 
 
 class GeoProperty(object):
@@ -52,13 +68,13 @@ class Item(object):
         """ IUDX Objects """
         self.cat = cat.Catalogue(catUrl)
         """ TODO: get rs from catalogue item """
-        self.rs = rs.ResourceServer("https://pune.iudx.org.in/resource-server/pscdcl/v1")
+        self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
 
         """ Item Objects """
-        self.riId = resourceItemId
-        cat_item = self.cat.getOneResourceItem(self.riId)
+        self.id = resourceItemId
+        cat_item = self.cat.getOneResourceItem(self.id)
         if cat_item is None:
-            raise RuntimeError("Item :" + self.riId +
+            raise RuntimeError("Item :" + self.id +
                                " not found in catalogue")
 
         geoAttributes = []
@@ -88,7 +104,10 @@ class Item(object):
             if attrType == "QuantitativeProperty":
                 self.quantitativeAttributes.append(attr)
                 setattr(self, attr,
-                        QuantitativeProperty(self.dm["properties"][attr]))
+                        QuantitativeProperty(self, attr, self.dm["properties"][attr]))
+
+        """ TODO: What if multiple time attributes """
+        self.timeAttribute = self.timeAttributes[0]
 
     def reset(self):
         """ Reset data of all quantitative attributes of this item
@@ -98,41 +117,102 @@ class Item(object):
         for d in self.quantitativeAttributes:
             getattr(self, d).reset()
 
-    def latest(self):
-        """ Get latest data for an item
-        Returns:
-            self (object): Returns back the updated object
-        """
-        data = self.rs.getLatestData(self.riId)[0]
-        """ TODO: Workaround for [0] below """
-        timeAttr = list(set(self.timeAttributes).intersection(set(data.keys())))[0]
-        timestamp = data[timeAttr]
-        self.reset()
-        for d in data.keys():
-            if d in self.quantitativeAttributes:
-                try:
-                    getattr(self, d).setValue(timestamp, float(data[d]))
-                except Exception as e:
-                    pass
-        return self
-
-    def during(self, start, end):
-        self.reset()
-        data = self.rs.getDataDuring(self.riId, start, end)
-        rows = 0
+    def populateValue(self, data):
         for row in data:
-            rows += 1
-            timeAttr = list(set(self.timeAttributes).intersection(set(row.keys())))[0]
-            timestamp = row[timeAttr]
+            timestamp = row[self.timeAttribute]
             for k in row.keys():
                 if k in self.quantitativeAttributes:
                     try:
                         getattr(self, k).setValue(timestamp, float(row[k]))
                     except Exception as e:
                         pass
+
+    def latest(self):
+        """ Get latest data for an item
+        Returns:
+            self (object): Returns back the updated object
+        """
+        data = self.rs.getLatestData(self.id)
+        self.reset()
+        self.populateValue(data)
         return self
 
+    def during(self, start, end):
+        self.reset()
+        data = self.rs.getDataDuring(self.id, start, end)
+        self.populateValue(data)
+        return self
 
-class Items(object):
-    def __init__(self):
-        pass
+    def valueBetween(self, attrName, minval, maxVal):
+        self.reset()
+        data = self.rs.getDataValuesBetween(self.id, attrName, minval, maxVal)
+        self.populateValue(data)
+
+
+    """ TODO: Add Status """
+
+
+class Items(MutableSequence):
+    def __init__(self, catUrl, items=None):
+        super(Items, self).__init__()
+        self.list = Manager().list()
+        self.catUrl = catUrl
+        if items is None:
+            return
+
+        """ Init items """
+        with Pool(4) as p:
+            p.starmap(self.initItem, [(self.catUrl, item["id"], self.list) for item in items])
+            p.close()
+            p.join()
+        self.list = list(self.list)
+        self.len = len(self.list)
+
+    def initItem(self, catUrl, item, objList):
+        objList.append(Item(catUrl, item))
+
+    def getLatest(self, obj):
+        obj.latest()
+        return obj
+
+    def getDuring(self, obj, startTime, endTime):
+        obj.during(startTime, endTime)
+        return obj
+
+    def latest(self):
+        with Pool(4) as p:
+            self.list = p.map(self.getLatest, self.list)
+            p.close()
+            p.join()
+
+    def during(self, startTime, endTime):
+        with Pool(4) as p:
+            self.list = p.starmap(self.getDuring,
+                                  [(self.list[i], startTime, endTime,)
+                                      for i in range(self.len)])
+            p.close()
+            p.join()
+
+    def __repr__(self):
+        return "<{0} {1}>".format(self.__class__.__name__, self.list)
+
+    def __len__(self):
+        """List length"""
+        return len(self.list)
+
+    def __getitem__(self, ii):
+        """Get a list item"""
+        return self.list[ii]
+
+    def __delitem__(self, ii):
+        """Delete an item"""
+        del self.list[ii]
+
+    def __setitem__(self, ii, val):
+        self.list[ii] = val
+
+    def __str__(self):
+        return str(self.list)
+
+    def insert(self, ii, val):
+        self.list.insert(ii, val)
