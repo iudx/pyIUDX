@@ -4,6 +4,7 @@ from pyIUDX.rs import rs
 from pyIUDX.cat import cat
 from pyIUDX.auth import auth
 import numpy as np
+import datetime
 import requests
 import copy
 
@@ -42,6 +43,10 @@ class QuantitativeProperty(object):
         self.parent.latest()
         return self.value
 
+    def during(self, startTime, endTime):
+        self.parent.during( startTime, endTime)
+        return self.value
+
     def valueBetween(self, minval, maxVal):
         self.parent.valueBetween(self.name, minval, maxVal)
         return self.value
@@ -58,7 +63,7 @@ class GeoProperty(object):
 
 
 class Item(object):
-    def __init__(self, catUrl, resourceItemId):
+    def __init__(self, catUrl, resourceItemId, dataModel=None):
         """ PyIUDX base class
         Args:
             catDomain (string): Domain name/ip of the catalogue server
@@ -91,10 +96,12 @@ class Item(object):
         setattr(self, self.geoAttributes, GeoProperty(cat_item[self.geoAttributes]))
 
         """ Load datamodel properties """
-        try:
-            self.dm = requests.get(cat_item["refDataModel"]["value"]).json()
-        except Exception as e:
-            raise RuntimeError("Couldn't retrieve item's data model")
+        self.dm = dataModel
+        if self.dm is None:
+            try:
+                self.dm = self.cat.getDataModel(self.id)
+            except Exception as e:
+                raise RuntimeError("Couldn't retrieve item's data model")
 
         """ TODO: Geoproperty in data model """
         for attr in self.dm["properties"].keys():
@@ -119,7 +126,9 @@ class Item(object):
 
     def populateValue(self, data):
         for row in data:
-            timestamp = row[self.timeAttribute]
+            """ TODO: Assuming a datetime format is bad """
+            timestamp = datetime.datetime.strptime(row[self.timeAttribute][:19],
+                                                   "%Y-%m-%dT%H:%M:%S")
             for k in row.keys():
                 if k in self.quantitativeAttributes:
                     try:
@@ -157,8 +166,16 @@ class Items(MutableSequence):
         super(Items, self).__init__()
         self.list = Manager().list()
         self.catUrl = catUrl
+        self.cat = cat.Catalogue(catUrl)
         if items is None:
             return
+
+        """ TODO: Replace this with resourceGroup datamodel """
+        """ Get initial datamodel """
+        try:
+            self.dm = self.cat.getDataModel(items[0]["id"])
+        except Exception as e:
+            raise RuntimeError("Couldn't retrieve item's data model")
 
         """ Init items """
         with Pool(4) as p:
@@ -169,7 +186,7 @@ class Items(MutableSequence):
         self.len = len(self.list)
 
     def initItem(self, catUrl, item, objList):
-        objList.append(Item(catUrl, item))
+        objList.append(Item(catUrl, item, self.dm))
 
     def getLatest(self, obj):
         obj.latest()
