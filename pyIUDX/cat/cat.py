@@ -140,6 +140,18 @@ class Catalogue():
         else:
             return {}
 
+    def getDataModel(self, id):
+        """ Get the data model for a given id
+        Returns:
+            list (List[Dict]): List  of catalogue items (dicts)
+        """
+        item = self.getOneResourceItem(id)
+        try:
+            dm = requests.get(item["refDataModel"]["value"]).json()
+        except:
+            raise RuntimeError("Couldn't load data model")
+        return(dm)
+
     def getManyResourceItems(self, attributes=None, filters=None, geo=None):
         """ Items matching the criterion
         Args:
