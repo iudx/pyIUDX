@@ -1,15 +1,15 @@
 {
     "latest": [
-        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Karve Statue Square_5",
-        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Chitale Bandhu Corner_41",
-        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/flood-sensor/Vishrantwadi Nala",
-        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/flood-sensor/Maharishi Shinde Bridge"
+        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Karve Statue Square_5",
+        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Chitale Bandhu Corner_41",
+        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/flood-sensor/Vishrantwadi Nala",
+        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/flood-sensor/Maharishi Shinde Bridge"
     ],
     "during": [
         {
-            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune Railway Station_28",
-            "startTime": "2019-10-18T00:00:00.000Z",
-            "endTime": "2019-10-19T00:00:00.000Z"
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Karve Statue Square_5",
+            "startTime": "2019-10-30T00:00:00.000Z",
+            "endTime": "2019-11-01T00:00:00.000Z"
         }
     ]
 }

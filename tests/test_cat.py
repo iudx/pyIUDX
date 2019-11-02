@@ -12,7 +12,7 @@ class CatTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(CatTest, self).__init__(*args, **kwargs)
-        self.catalogue = cat.Catalogue("https://catalogue.iudx.org.in/catalogue/v1")
+        self.catalogue = cat.Catalogue("https://pudx.catalogue.iudx.org.in/catalogue/v1")
 
     def test_get_count(self):
         attributes = {"tags": ["aqi", "aqm"]}
@@ -21,7 +21,7 @@ class CatTest(unittest.TestCase):
         self.assertNotEqual(count, 0)
 
     def test_get_one(self):
-        id = ('rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/'
+        id = ('rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/'
               'aqm-bosch-climo/Datta Mandir Square_20')
         item = self.catalogue.getOneResourceItem(id)
         self.assertTrue(item)
@@ -44,7 +44,7 @@ class CatTest(unittest.TestCase):
         self.assertTrue(count)
 
     def test_get_many_geo_circle(self):
-        geo = {"circle": {"lat": 12.273737, "lon": 78.37475, "radius": 200000}}
+        geo = {"circle": {"lat": 18.539107, "lon": 73.903987, "radius": 200000}}
         items = self.catalogue.getManyResourceItems(geo=geo)
         count = self.catalogue.getItemCount(geo=geo)
         self.assertTrue(items)
