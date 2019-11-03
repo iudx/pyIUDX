@@ -15,6 +15,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../pyIUDX/'))
 
 
+master_doc = 'index'
 # -- Project information -----------------------------------------------------
 
 project = 'pyIUDX'
@@ -35,6 +36,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon'
 ]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

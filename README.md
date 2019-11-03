@@ -1,45 +1,25 @@
-# pyIUDX - Python SDK for IUDX.
+# pyIUDX - Python SDK for IUDX
+<p align="center">
+<img src="https://github.com/iudx/pyIUDX/blob/master/docs/logo.png">
+</p>
+Simplifies using the India Urban Data Exchange platform. 
+[IUDX](https://iudx.org.in)
+Provides an API interface to perform scientific computing over various 
+smart city resources. 
+Vist [the pune IUDX](https://pudx.catalogue.iudx.org.in) to get a glimpse of IUDX.
 
 ## Installation
 ```
-pip install pyIUDX
+pip install git+https://github.com/iudx/pyIUDX
 ```
 
-## Usage
+## IPython Example
+A simple IPython notebook going throught the entire process flow can be found here.
+[Notebook](examples/pyIUDX_sample_usecases.ipynb)
 
-### Catalogue
-1. Load the catalogue module \
-```
-from pyIUDX.cat import cat 
-self.catalogue = cat.Catalogue("https://catalogue.iudx.org.in/catalogue/v1")
-```
-2. Show how many items are in the catalogue
-```
-print(cat.getItemCount())
-```
-3. Print the catalogue item for one item
-```
-print(cat.getResourceItem("rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune Railway Station_28"))
-```
-
-### Resource servers
+## API Docs
+Further documentation on low level apis and their usage can be found here
 
 
-## PyPI
-[https://pypi.org/project/pyIUDX/](https://pypi.org/project/pyIUDX/)
-
-### Auth 
-```python
-from pyIUDX import Auth 
-auth = Auth("auth.iudx.org.in","my-certificate.pem", "my-private-key.pem")
-access_token = auth.get_token(
-	[
-		{"resource-id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune-Railway-Station-1"},
-		{"resource-id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune-Railway-Station-2"},
-		{"resource-id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune-Railway-Station-3"},
-		{"resource-id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune-Railway-Station-4"},
-		{"resource-id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune-Railway-Station-5"}
-	]
-)
-print(access_token)
-```
+## Usage Examples
+The tests directory and the examples directory contain further usage examples.
