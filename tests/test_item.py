@@ -18,10 +18,12 @@ class ItemsTest(unittest.TestCase):
         print("Getting " + str(len(itemList)) + " items")
 
     def test_get_latest(self):
+        print("Getting latest values")
         self.aqms.latest()
         print(self.aqms[0].CO2_MIN.value)
 
     def test_get_during(self):
+        print("Getting during values")
         self.aqms.during("2019-10-28T00:00:00.000Z",
                          "2019-10-29T00:00:00.000Z")
         print(self.aqms[0].CO2_MIN.value)

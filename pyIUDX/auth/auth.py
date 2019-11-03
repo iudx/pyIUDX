@@ -7,7 +7,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Auth():
-    def __init__(self, auth_server = "auth.iudx.org.in", certificate, key, version=1):
+    def __init__(self,  certificate,
+                 key, auth_server="auth.iudx.org.in", version=1):
         self.url = "https://" + auth_server + "/auth/v" + str(version)
         self.credentials = (certificate, key)
 
@@ -15,13 +16,13 @@ class Auth():
         body = json.dumps(body)
         if api == "acl":
             response = requests.get(self.url + "/" + api,
-                                   cert=self.credentials, verify=True)
+                                    cert=self.credentials, verify=True)
         else:
             response = requests.post(self.url + "/" + api,
-                                    cert=self.credentials,
-                                    verify=True, data=body,
-                                    headers={"content-type":
-                                             "application/json"})
+                                     cert=self.credentials,
+                                     verify=True, data=body,
+                                     headers={"content-type":
+                                              "application/json"})
         if response.status_code != 200:
             sys.stderr.write("Auth API failure | " + self.url +
                              " | " + response.reason + " | " + response.text)
