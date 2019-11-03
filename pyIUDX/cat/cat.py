@@ -29,7 +29,7 @@ class Catalogue():
         return(items.json())
 
     def makeOpts(self, attributes=None, filters=None, geo=None):
-        """ Make attributes options string
+        """Make attributes options string
         Args:
             attributes (Dict): Array of key value pairs
                                      For e.x,
@@ -101,7 +101,7 @@ class Catalogue():
         return opts
 
     def getItemCount(self, attributes=None, filters=None, geo=None):
-        """ Number of items matching the criterion
+        """Number of items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
                                      For e.x,
@@ -122,7 +122,7 @@ class Catalogue():
             return -1
 
     def getOneResourceItem(self, id, filters=None):
-        """ Item given the id
+        """Item given the id
         Args:
             id (string): ID of the resourceItem
             filters (List[str]): Array of strings as filter opts
@@ -141,7 +141,7 @@ class Catalogue():
             return {}
 
     def getDataModel(self, id):
-        """ Get the data model for a given id
+        """Get the data model for a given id
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
@@ -153,7 +153,7 @@ class Catalogue():
         return(dm)
 
     def getManyResourceItems(self, attributes=None, filters=None, geo=None):
-        """ Items matching the criterion
+        """Items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
                                      For e.x,
