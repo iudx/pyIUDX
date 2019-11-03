@@ -1,6 +1,4 @@
-import urllib3
 import requests
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 """
@@ -31,7 +29,7 @@ class Catalogue():
         return(items.json())
 
     def makeOpts(self, attributes=None, filters=None, geo=None):
-        """ Make attributes options string
+        """Make attributes options string
         Args:
             attributes (Dict): Array of key value pairs
                                      For e.x,
@@ -103,7 +101,7 @@ class Catalogue():
         return opts
 
     def getItemCount(self, attributes=None, filters=None, geo=None):
-        """ Number of items matching the criterion
+        """Number of items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
                                      For e.x,
@@ -124,7 +122,7 @@ class Catalogue():
             return -1
 
     def getOneResourceItem(self, id, filters=None):
-        """ Item given the id
+        """Item given the id
         Args:
             id (string): ID of the resourceItem
             filters (List[str]): Array of strings as filter opts
@@ -142,8 +140,20 @@ class Catalogue():
         else:
             return {}
 
+    def getDataModel(self, id):
+        """Get the data model for a given id
+        Returns:
+            list (List[Dict]): List  of catalogue items (dicts)
+        """
+        item = self.getOneResourceItem(id)
+        try:
+            dm = requests.get(item["refDataModel"]["value"]).json()
+        except:
+            raise RuntimeError("Couldn't load data model")
+        return(dm)
+
     def getManyResourceItems(self, attributes=None, filters=None, geo=None):
-        """ Items matching the criterion
+        """Items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
                                      For e.x,

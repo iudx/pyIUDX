@@ -1,31 +1,32 @@
+import unittest
 import sys
 sys.path.insert(1, '../pyIUDX')
 from pyIUDX.rs import item
+from pyIUDX.cat import cat
 
-aqm = item.Item("https://catalogue.iudx.org.in/catalogue/v1", "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Pune Railway Station_28")
 
-""" Print aqm item's time attributes """
-print(aqm.timeAttributes)
-""" Print aqm item's geo attributes """
-print(aqm.geoAttributes)
-""" Print aqm item's geo attributes type and coordinates"""
-print(aqm.location.type)
-print(aqm.location.coordinates)
+class ItemsTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        self.catalogue = cat.Catalogue("https://pudx.catalogue.iudx.org.in/catalogue/v1")
+        attributes = {"tags": ["aqm"]}
+        filters = ["id"]
+        itemList = self.catalogue.getManyResourceItems(attributes=attributes,
+                                                       filters=filters)
+        self.aqms = item.Items("https://pudx.catalogue.iudx.org.in/catalogue/v1",
+                               items=itemList)
+        print("Getting " + str(len(itemList)) + " items")
 
-""" Print aqm item's quantitativeAttributes attributes """
-print(aqm.quantitativeAttributes)
-""" Print CO2 units and subattributes """
-print(aqm.UV_MAX.unitText)
-print(aqm.CO2_MIN.symbol)
-print(aqm.CO2_MIN.attributes)
+    def test_get_latest(self):
+        self.aqms.latest()
+        print(self.aqms[0].CO2_MIN.value)
 
-""" Get latest data for aqm and print Humidity """
-print(aqm.latest().HUMIDITY.value)
-""" Print latest CO2_MAX value, latest() was already done """
+    def test_get_during(self):
+        self.aqms.during("2019-10-28T00:00:00.000Z",
+                         "2019-10-29T00:00:00.000Z")
+        print(self.aqms[0].CO2_MIN.value)
 
-""" Get data during time period for that aqm device """
-input()
-aqm.during("2019-10-18T00:00:00.000Z", "2019-10-19T00:00:00.000Z")
-print(aqm.CO2_MAX.value)
-""" Print its values, numpy array """
-# print(aqm.CO2_MAX.value)
+
+if __name__ == '__main__':
+    unittest.main()
+

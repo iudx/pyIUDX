@@ -13,7 +13,7 @@ class RSTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(RSTest, self).__init__(*args, **kwargs)
-        self.rs = rs.ResourceServer("https://pune.iudx.org.in/resource-server/pscdcl/v1")
+        self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
         self.testVector = {}
         ''' TODO: Make this independent of paths '''
         with open("./tests/testVector.json", "r") as f:
@@ -23,8 +23,6 @@ class RSTest(unittest.TestCase):
         latestArray = self.testVector["latest"]
         for item in latestArray:
             data = self.rs.getLatestData(item)
-            print(data)
-            input()
             self.assertTrue(data)
 
     def test_get_during(self):
@@ -32,6 +30,7 @@ class RSTest(unittest.TestCase):
         for item in duringArray:
             data = self.rs.getDataDuring(item["id"],
                                          item["startTime"], item["endTime"])
+            print(data)
             self.assertTrue(data)
 
 
