@@ -1,30 +1,33 @@
 import sys
 import json
+import urllib3
 import requests
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Auth():
-    def __init__(self, auth_server, certificate, key, version=1):
-        self.url = "https://" + auth_server + "/auth"+"/v" + str(version)
+    def __init__(self, auth_server = "auth.iudx.org.in", certificate, key, version=1):
+        self.url = "https://" + auth_server + "/auth/v" + str(version)
         self.credentials = (certificate, key)
 
     def call(self, api, body=None):
         body = json.dumps(body)
         if api == "acl":
-            connect = requests.get(self.url + "/" + api,
+            response = requests.get(self.url + "/" + api,
                                    cert=self.credentials, verify=True)
         else:
-            connect = requests.post(self.url + "/" + api,
+            response = requests.post(self.url + "/" + api,
                                     cert=self.credentials,
                                     verify=True, data=body,
                                     headers={"content-type":
                                              "application/json"})
-        if connect.status_code != 200:
+        if response.status_code != 200:
             sys.stderr.write("Auth API failure | " + self.url +
-                             " | " + connect.reason + " | " + connect.text)
+                             " | " + response.reason + " | " + response.text)
             return None
         else:
-            return json.loads(connect.text)
+            return json.loads(response.text)
 
     def get_token(self, request, token_time=None, existing_token=None):
         body = {'request': request}
