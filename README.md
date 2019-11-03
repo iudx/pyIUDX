@@ -1,12 +1,11 @@
 # pyIUDX - Python SDK for IUDX
-<p align="center">
-<img src="https://github.com/iudx/pyIUDX/blob/master/docs/logo.png">
-</p>
-Simplifies using the India Urban Data Exchange platform. 
-[IUDX](https://iudx.org.in)
+
+![alt text](https://github.com/iudx/pyIUDX/blob/master/docs/pyIUDX.png "pyIUDX")
+
+Simplifies using the India Urban Data Exchange [IUDX](https://iudx.org.in) platform. 
 Provides an API interface to perform scientific computing over various 
 smart city resources. 
-Vist [the pune IUDX](https://pudx.catalogue.iudx.org.in) to get a glimpse of IUDX.
+Vist [the pune IUDX](https://pudx.catalogue.iudx.org.in) to get a glimpse of Pune City's IUDX implementation.
 
 ## Installation
 ```
@@ -19,6 +18,7 @@ A simple IPython notebook going throught the entire process flow can be found he
 
 ## API Docs
 Further documentation on low level apis and their usage can be found here
+https://pyiudx.readthedocs.io/en/latest/
 
 
 ## Usage Examples
