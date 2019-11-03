@@ -49,6 +49,12 @@ class QuantitativeProperty(object):
         self.value = np.empty((0, 2), dtype=object)
         return
 
+    def sort(self):
+        """Sort time series
+        """
+        self.value = self.value[np.argsort(self.value[:, 0])]
+
+
     def setValue(self, time, value):
         """Set Value for this Property
         Args:
@@ -212,6 +218,9 @@ class Item(object):
                         getattr(self, k).setValue(timestamp, float(row[k]))
                     except Exception as e:
                         pass
+        """Sort time series """
+        for k in self.quantitativeProperties:
+            getattr(self, k).sort()
 
     def latest(self):
         """ Get latest data for all properties belonging to

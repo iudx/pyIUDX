@@ -1,5 +1,6 @@
 import unittest
 import sys
+import matplotlib.pyplot as plt
 sys.path.insert(1, '../pyIUDX')
 from pyIUDX.rs import item
 from pyIUDX.cat import cat
@@ -9,9 +10,11 @@ class ItemsTest(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.catalogue = cat.Catalogue("https://pudx.catalogue.iudx.org.in/catalogue/v1")
+        geo = {"circle": {"lat": 18.539107, "lon": 73.903987, "radius": 3000}}
         attributes = {"tags": ["aqm"]}
         filters = ["id"]
         itemList = self.catalogue.getManyResourceItems(attributes=attributes,
+                                                       geo=geo,
                                                        filters=filters)
         self.aqms = item.Items("https://pudx.catalogue.iudx.org.in/catalogue/v1",
                                items=itemList)
