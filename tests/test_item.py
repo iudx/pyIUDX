@@ -29,9 +29,9 @@ class ItemsTest(unittest.TestCase):
 
     def test_get_during(self):
         print("Getting during values")
-        self.aqms.during("2019-10-28T00:00:00.000Z",
+        self.aqms.during("2019-10-26T00:00:00.000Z",
                          "2019-10-29T00:00:00.000Z")
-        print(self.aqms[0].CO2_MIN.value)
+        print(self.aqms[1].CO2_MIN.value)
 
 
 if __name__ == '__main__':

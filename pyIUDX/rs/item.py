@@ -16,6 +16,7 @@ import copy
 """ TODO: Read base schemas locally """
 """ TODO: Remove cat url in Item() """
 """ TODO: Error in case data is not coming """
+""" TODO: Item constructor can directly take catalogue entry """
 
 
 class QuantitativeProperty(object):
