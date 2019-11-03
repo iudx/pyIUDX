@@ -156,20 +156,20 @@ class Item(object):
             raise RuntimeError("Item :" + self.id +
                                " not found in catalogue")
 
-        geoAttributes = []
-        self.timeAttributes = []
-        self.quantitativeAttributes = []
+        geoProperties = []
+        self.timeProperties = []
+        self.quantitativeProperties = []
 
         for key in cat_item.keys():
             if isinstance(cat_item[key], dict):
                 if cat_item[key]["type"] == "GeoProperty":
-                    geoAttributes.append(key)
+                    geoProperties.append(key)
 
         """ load properties """
 
         """ TODO: multiple geoproperties """
-        self.geoAttributes = geoAttributes[0]
-        setattr(self, self.geoAttributes, GeoProperty(cat_item[self.geoAttributes]))
+        self.geoProperties = geoProperties[0]
+        setattr(self, self.geoProperties, GeoProperty(cat_item[self.geoProperties]))
 
         """ Load datamodel properties """
         self.dm = dataModel
@@ -181,22 +181,22 @@ class Item(object):
         for attr in self.dm["properties"].keys():
             attrType = self.dm["properties"][attr]["$ref"].split("/")[-1]
             if attrType == "TimeProperty":
-                self.timeAttributes.append(attr)
+                self.timeProperties.append(attr)
             if attrType == "QuantitativeProperty":
-                self.quantitativeAttributes.append(attr)
+                self.quantitativeProperties.append(attr)
                 setattr(self, attr,
                         QuantitativeProperty(self, attr, self.dm["properties"][attr]))
 
         """ TODO: What if multiple time attributes """
         """ Find time attribute from datamodel """
-        self.timeAttribute = self.timeAttributes[0]
+        self.timeProperty = self.timeProperties[0]
 
     def reset(self):
         """ Reset data of all quantitative attributes of this item
         Returns:
             self (object): Returns back the updated object
         """
-        for d in self.quantitativeAttributes:
+        for d in self.quantitativeProperties:
             getattr(self, d).reset()
 
     def populateValue(self, data):
@@ -204,10 +204,10 @@ class Item(object):
         """
         for row in data:
             """ TODO: Assuming a datetime format is bad """
-            timestamp = datetime.datetime.strptime(row[self.timeAttribute][:19],
+            timestamp = datetime.datetime.strptime(row[self.timeProperty][:19],
                                                    "%Y-%m-%dT%H:%M:%S")
             for k in row.keys():
-                if k in self.quantitativeAttributes:
+                if k in self.quantitativeProperties:
                     try:
                         getattr(self, k).setValue(timestamp, float(row[k]))
                     except Exception as e:

@@ -50,6 +50,17 @@ class CatTest(unittest.TestCase):
         self.assertTrue(items)
         self.assertTrue(count)
 
+    def test_get_many_geo_circle_attribute(self):
+        geo = {"circle": {"lat": 18.539107, "lon": 73.903987, "radius": 3000}}
+        attributes = {"tags": ["aqm"]}
+        items = self.catalogue.getManyResourceItems(attributes=attributes,
+                                                    geo=geo)
+        count = self.catalogue.getItemCount(attributes=attributes,
+                                            geo=geo)
+        print(count)
+        self.assertTrue(items)
+        self.assertTrue(count)
+
     def test_get_many_geo_bbox(self):
         geo = {"bbox": [[18.4, 73.9], [28.6, 80.2]]}
         items = self.catalogue.getManyResourceItems(geo=geo)

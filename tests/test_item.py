@@ -18,6 +18,8 @@ class ItemsTest(unittest.TestCase):
         print("Getting " + str(len(itemList)) + " items")
 
     def test_get_latest(self):
+        print("All quantitativeProperties")
+        print(self.aqms[0].quantitativeProperties)
         print("Getting latest values")
         self.aqms.latest()
         print(self.aqms[0].CO2_MIN.value)
