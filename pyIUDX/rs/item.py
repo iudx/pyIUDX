@@ -19,7 +19,20 @@ import copy
 
 
 class QuantitativeProperty(object):
+    """Container class for a quantitative property
+    QuantitativeProperty is a measureable property having
+    further attributes such as units. Values are always indexed
+    with time.
+    """
+
     def __init__(self, obj, name, properties):
+        """QuantitativeProperty constructor
+        Args:
+            obj (object): Parent object
+            name (string): This property's name
+            properties (Dict[string]): Various properties of the QuantitativeProperty
+            e.g {"unitText": "ppm", "describes": "description of the property"]
+        """
         self.name = name
         self.value = np.empty((0, 2), dtype=object)
         for p in properties.keys():
@@ -31,29 +44,89 @@ class QuantitativeProperty(object):
         self.parent = obj
 
     def reset(self):
+        """Reset value of this Property
+        """
         self.value = np.empty((0, 2), dtype=object)
         return
 
     def setValue(self, time, value):
+        """Set Value for this Property
+        Args:
+            time (datetime.datetime()): Time index
+            value (float): Value
+        """
         self.value = np.append(self.value,
                                np.array([[time, value]], dtype=object), axis=0)
         return
 
     def latest(self):
+        """Get latest data for this property
+        Returns:
+            value (ndarray): numpy 2d array with 0th column as time
+        """
         self.parent.latest()
         return self.value
 
     def during(self, startTime, endTime):
-        self.parent.during( startTime, endTime)
+        """Get data during a set interval for this property
+        Args:
+            startTime (string): Start time
+            endTime (string): End time
+        Returns:
+            value (ndarray): numpy 2d array with 0th column as time
+        TODO:
+            Use date time instead of strings
+        """
+        self.parent.during(startTime, endTime)
         return self.value
 
     def valueBetween(self, minval, maxVal):
+        """Get all data during which this attribute was between min and max val
+        Args:
+            minVal (int): minimum value
+            minVal (int): maximum value
+        Returns:
+            value (ndarray): numpy 2d array with 0th column as time
+        TODO:
+            Specify time frame too
+        """
         self.parent.valueBetween(self.name, minval, maxVal)
         return self.value
 
 
 class GeoProperty(object):
+    """Container class for a Geo property
+    GeoProperty is a spatial property having
+    further attributes such as coordinates for either a point or a polygon.
+    """
+
     def __init__(self, geoProperty):
+        """GeoProperty constructor
+        Args:
+            properties (Dict[string]): Various properties of the GeoProperty
+            e.g
+            "location" : {
+                "type" : "GeoProperty",
+                "value" : {
+                  "address" : "abc",
+                  "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ 73.903987, 18.539107 ]
+                  }
+                }
+            or
+             "coverageRegion" : {
+                "type" : "GeoProperty",
+                "value" : {
+                  "address" : "Pune",
+                  "geometry" : {
+                    "type" : "Polygon",
+                    "coordinates" : [ [ [ 73.86314392089844, 18.433364808062795 ],
+                                        [ 73.87138366699219, 18.443787134087998 ] ] ]
+                  }
+                }
+              },
+        """
         if geoProperty["value"]["geometry"]["type"] == "Point":
             self.type = "Point"
             self.coordinates = geoProperty["value"]["geometry"]["coordinates"]
@@ -63,20 +136,21 @@ class GeoProperty(object):
 
 
 class Item(object):
+    """class for an iudx resource item
+    A resource item has it's static attribute representation in a catalogue
+    and a dynamic "data" representation in a resource server.
+    This class presents an abstraction layer combining both
+    """
+
     def __init__(self, catUrl, resourceItemId, dataModel=None):
-        """ PyIUDX base class
+        """ PyIUDX item base class
         Args:
-            catDomain (string): Domain name/ip of the catalogue server
-            catPort (string): Catalogue server port
-            catVersion (string): catalogue version
+            catUrl (string): Domain name/ip of the catalogue server
         """
-        """ IUDX Objects """
+        self.id = resourceItemId
         self.cat = cat.Catalogue(catUrl)
         """ TODO: get rs from catalogue item """
         self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
-
-        """ Item Objects """
-        self.id = resourceItemId
         cat_item = self.cat.getOneResourceItem(self.id)
         if cat_item is None:
             raise RuntimeError("Item :" + self.id +
@@ -91,7 +165,9 @@ class Item(object):
                 if cat_item[key]["type"] == "GeoProperty":
                     geoAttributes.append(key)
 
-        """ TODO: What if there is more than one geoProperty """
+        """ load properties """
+
+        """ TODO: multiple geoproperties """
         self.geoAttributes = geoAttributes[0]
         setattr(self, self.geoAttributes, GeoProperty(cat_item[self.geoAttributes]))
 
@@ -102,8 +178,6 @@ class Item(object):
                 self.dm = self.cat.getDataModel(self.id)
             except Exception as e:
                 raise RuntimeError("Couldn't retrieve item's data model")
-
-        """ TODO: Geoproperty in data model """
         for attr in self.dm["properties"].keys():
             attrType = self.dm["properties"][attr]["$ref"].split("/")[-1]
             if attrType == "TimeProperty":
@@ -114,6 +188,7 @@ class Item(object):
                         QuantitativeProperty(self, attr, self.dm["properties"][attr]))
 
         """ TODO: What if multiple time attributes """
+        """ Find time attribute from datamodel """
         self.timeAttribute = self.timeAttributes[0]
 
     def reset(self):
@@ -125,6 +200,8 @@ class Item(object):
             getattr(self, d).reset()
 
     def populateValue(self, data):
+        """Helper function to populate a QuantitativeProperty's value array
+        """
         for row in data:
             """ TODO: Assuming a datetime format is bad """
             timestamp = datetime.datetime.strptime(row[self.timeAttribute][:19],
@@ -137,7 +214,8 @@ class Item(object):
                         pass
 
     def latest(self):
-        """ Get latest data for an item
+        """ Get latest data for all properties belonging to
+        this item
         Returns:
             self (object): Returns back the updated object
         """
@@ -147,12 +225,28 @@ class Item(object):
         return self
 
     def during(self, start, end):
+        """Get data during a set interval for all properties belonging to
+        this item
+        Args:
+            startTime (string): Start time
+            endTime (string): End time
+        Returns:
+            value (ndarray): numpy 2d array with 0th column as time
+        """
         self.reset()
         data = self.rs.getDataDuring(self.id, start, end)
         self.populateValue(data)
         return self
 
     def valueBetween(self, attrName, minval, maxVal):
+        """Get all data during which this attribute was between min and max val
+        Args:
+            attrName (string): name of the attribute
+            minVal (int): minimum value
+            minVal (int): maximum value
+        TODO:
+            Specify time frame too
+        """
         self.reset()
         data = self.rs.getDataValuesBetween(self.id, attrName, minval, maxVal)
         self.populateValue(data)
@@ -162,7 +256,16 @@ class Item(object):
 
 
 class Items(MutableSequence):
+    """class for a list of iudx resource items.
+    This class extends a list to provide Class Item style functionality
+    coupled with multiprocessing pool to allow for faster data access
+    """
+
     def __init__(self, catUrl, items=None):
+        """ PyIUDX items base class
+        Args:
+            catUrl (string): Domain name/ip of the catalogue server
+        """
         super(Items, self).__init__()
         self.list = Manager().list()
         self.catUrl = catUrl
@@ -186,29 +289,47 @@ class Items(MutableSequence):
         self.len = len(self.list)
 
     def initItem(self, catUrl, item, objList):
+        """Multiprocessed job """
         objList.append(Item(catUrl, item, self.dm))
 
     def getLatest(self, obj):
+        """Multiprocessed job """
         obj.latest()
         return obj
 
     def getDuring(self, obj, startTime, endTime):
+        """Multiprocessed job """
         obj.during(startTime, endTime)
         return obj
 
     def latest(self):
+        """ Get latest data for all resource items of this instance and for all
+        properties belonging to this item
+        Returns:
+            self (object): Returns back the updated object
+        """
         with Pool(4) as p:
             self.list = p.map(self.getLatest, self.list)
             p.close()
             p.join()
+        return self
 
     def during(self, startTime, endTime):
+        """Get data during a set interval for all resource items of this
+        instance and for all properties belonging to this item
+        Args:
+            startTime (string): Start time
+            endTime (string): End time
+        Returns:
+            value (ndarray): numpy 2d array with 0th column as time
+        """
         with Pool(4) as p:
             self.list = p.starmap(self.getDuring,
                                   [(self.list[i], startTime, endTime,)
                                       for i in range(self.len)])
             p.close()
             p.join()
+        return self
 
     def __repr__(self):
         return "<{0} {1}>".format(self.__class__.__name__, self.list)
