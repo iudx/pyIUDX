@@ -16,7 +16,7 @@ class RSTest(unittest.TestCase):
         self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
         self.testVector = {}
         ''' TODO: Make this independent of paths '''
-        with open("./tests/testVector.json", "r") as f:
+        with open("./tests/testVector_itms.json", "r") as f:
             self.testVector = json.load(f)
 
     def test_get_latest(self):
@@ -24,15 +24,15 @@ class RSTest(unittest.TestCase):
         for item in latestArray:
             data = self.rs.getLatestData(item)
             self.assertTrue(data)
+            print(data)
 
     def test_get_during(self):
         duringArray = self.testVector["during"]
         for item in duringArray:
             data = self.rs.getDataDuring(item["id"],
                                          item["startTime"], item["endTime"])
-            print(json.dumps(data))
+            print(json.dumps(data, indent=4))
             self.assertTrue(data)
-
 
 if __name__ == '__main__':
     unittest.main()

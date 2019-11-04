@@ -11,12 +11,52 @@ import copy
 
 
 """ TODO: FIx numpy datetime issue """
-""" TODO: Multiprocessing """
 """ TODO: GeoAttributes coming in data """
 """ TODO: Read base schemas locally """
 """ TODO: Remove cat url in Item() """
 """ TODO: Error in case data is not coming """
 """ TODO: Item constructor can directly take catalogue entry """
+
+
+class Property(object):
+    """Container class for a Property
+
+    Property is an aspect of a resource item that describes it
+    or its current state
+    """
+
+    def __init__(self, name, properties):
+        self.name = name
+        self.state = None
+        for p in properties.keys():
+            setattr(self, p, properties[p])
+        self.attributes = copy.deepcopy(self.__dict__)
+        self.attributes.pop("$ref", None)
+        self.attributes.pop("attributes", None)
+
+    def setState(self,  state, time=None):
+        """Set State for this Property
+        Args:
+            value (string): Value
+            time (datetime.datetime()): Time index
+        """
+        if time is None:
+            self.state = state
+        else:
+            self.state = np.append(self.state,
+                                   np.array([[time, state]],
+                                            dtype=object), axis=0)
+        return
+
+    def reset(self):
+        if isinstance(self.state, str):
+            return
+        self.state = np.empty((0, 2), dtype=object)
+
+    def sort(self):
+        """Sort time series
+        """
+        self.state = self.state[np.argsort(self.state[:, 0])]
 
 
 class QuantitativeProperty(object):
@@ -54,7 +94,6 @@ class QuantitativeProperty(object):
         """Sort time series
         """
         self.value = self.value[np.argsort(self.value[:, 0])]
-
 
     def setValue(self, time, value):
         """Set Value for this Property
@@ -107,43 +146,61 @@ class GeoProperty(object):
     further attributes such as coordinates for either a point or a polygon.
     """
 
-    def __init__(self, geoProperty):
+    def __init__(self, name):
         """GeoProperty constructor
+
+        Properties to be used only for geoProperties defined in dataModels
+
         Args:
             properties (Dict[string]): Various properties of the GeoProperty
-            e.g
-            "location" : {
-                "type" : "GeoProperty",
-                "value" : {
-                  "address" : "abc",
-                  "geometry" : {
-                    "type" : "Point",
-                    "coordinates" : [ 73.903987, 18.539107 ]
-                  }
-                }
-            or
-             "coverageRegion" : {
-                "type" : "GeoProperty",
-                "value" : {
-                  "address" : "Pune",
-                  "geometry" : {
-                    "type" : "Polygon",
-                    "coordinates" : [ [ [ 73.86314392089844, 18.433364808062795 ],
-                                        [ 73.87138366699219, 18.443787134087998 ] ] ]
-                  }
-                }
-              },
+            to bes passed only if this property is defined in data model
         """
+        self.name = name
+        """ Type in case geoProperty is static """
+        self.type = None
+        self.coordinates = None
+
+    def setStaticGeo(self, geoProperty):
+        """ Static points """
         if geoProperty["value"]["geometry"]["type"] == "Point":
             self.type = "Point"
             self.coordinates = geoProperty["value"]["geometry"]["coordinates"]
+
         elif geoProperty["value"]["geometry"]["type"] == "Polygon":
             self.type = "Polygon"
             self.coordinates = geoProperty["value"]["geometry"]["coordinates"]
 
+    def setDynamicGeo(self, time, coordinates):
+        """Set Value for this geoProperty
+
+        To be used only when this geoProperty is time varying
+
+        Args:
+            time (datetime.datetime()): Time index
+            value (float): Value
+        """
+        self.coordinates = np.append(self.coordinates,
+                                     np.array([[time, coordinates]],
+                                              dtype=object), axis=0)
+        return
+
+    def reset(self):
+        """Reset coordinates
+        This is only invoked in case where this geoProperty is time varying
+        TODO: Workaround for type
+        """
+        if self.type is None:
+            self.coordinates = np.empty((0, 2), dtype=object)
+
+    def sort(self):
+        """Sort time series
+        """
+        self.coordinates = self.coordinates[np.argsort(self.coordinates[:, 0])]
+
 
 class Item(object):
     """class for an iudx resource item
+
     A resource item has it's static attribute representation in a catalogue
     and a dynamic "data" representation in a resource server.
     This class presents an abstraction layer combining both
@@ -158,25 +215,15 @@ class Item(object):
         self.cat = cat.Catalogue(catUrl)
         """ TODO: get rs from catalogue item """
         self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
-        cat_item = self.cat.getOneResourceItem(self.id)
-        if cat_item is None:
+        catItem = self.cat.getOneResourceItem(self.id)
+        if catItem is None:
             raise RuntimeError("Item :" + self.id +
                                " not found in catalogue")
 
-        geoProperties = []
+        self.properties = []
+        self.geoProperties = []
         self.timeProperties = []
         self.quantitativeProperties = []
-
-        for key in cat_item.keys():
-            if isinstance(cat_item[key], dict):
-                if cat_item[key]["type"] == "GeoProperty":
-                    geoProperties.append(key)
-
-        """ load properties """
-
-        """ TODO: multiple geoproperties """
-        self.geoProperties = geoProperties[0]
-        setattr(self, self.geoProperties, GeoProperty(cat_item[self.geoProperties]))
 
         """ Load datamodel properties """
         self.dm = dataModel
@@ -185,26 +232,48 @@ class Item(object):
                 self.dm = self.cat.getDataModel(self.id)
             except Exception as e:
                 raise RuntimeError("Couldn't retrieve item's data model")
+
+        """ Read attributes from datamodel and store"""
         for attr in self.dm["properties"].keys():
-            attrType = self.dm["properties"][attr]["$ref"].split("/")[-1]
+            try:
+                attrType = self.dm["properties"][attr]["$ref"].split("/")[-1]
+            except:
+                continue
+
+            if attrType == "Property":
+                self.properties.append(attr)
+                setattr(self, attr,
+                        Property(attr,
+                                 self.dm["properties"][attr]))
+
             if attrType == "TimeProperty":
                 self.timeProperties.append(attr)
+
             if attrType == "QuantitativeProperty":
                 self.quantitativeProperties.append(attr)
                 setattr(self, attr,
-                        QuantitativeProperty(self, attr, self.dm["properties"][attr]))
+                        QuantitativeProperty(self, attr,
+                                             self.dm["properties"][attr]))
+
+            if attrType == "GeoProperty":
+                self.geoProperties.append(attr)
+                setattr(self, attr,
+                        GeoProperty(attr))
 
         """ TODO: What if multiple time attributes """
         """ Find time attribute from datamodel """
         self.timeProperty = self.timeProperties[0]
 
-    def reset(self):
-        """ Reset data of all quantitative attributes of this item
-        Returns:
-            self (object): Returns back the updated object
-        """
-        for d in self.quantitativeProperties:
-            getattr(self, d).reset()
+        """ Read item properties """
+        for key in catItem.keys():
+            if isinstance(catItem[key], dict):
+                if (catItem[key]["type"] == "GeoProperty" and
+                        key in self.geoProperties):
+                    getattr(self, key).setStaticGeo(catItem[key])
+                if (catItem[key]["type"] == "Property" and
+                        key in self.properties):
+                    getattr(self, key).setState(catItem[key])
+
 
     def populateValue(self, data):
         """Helper function to populate a QuantitativeProperty's value array
@@ -216,16 +285,49 @@ class Item(object):
             for k in row.keys():
                 if k in self.quantitativeProperties:
                     try:
-                        getattr(self, k).setValue(timestamp, float(row[k]))
+                        attr = getattr(self, k)
+                        attr.setValue(timestamp, float(row[k]))
                     except Exception as e:
                         pass
+                if k in self.geoProperties:
+                    try:
+                        attr = getattr(self, k)
+                        attr.setDynamicGeo(timestamp, float(row[k]))
+                    except Exception as e:
+                        pass
+
+                if k in self.properties:
+                    try:
+                        attr = getattr(self, k)
+                        attr.setState(row[k], time=timestamp)
+                    except Exception as e:
+                        pass
+
         """Sort time series """
         for k in self.quantitativeProperties:
             getattr(self, k).sort()
+        for k in self.geoProperties:
+            getattr(self, k).sort()
+        for k in self.properties:
+            getattr(self, k).sort()
+
+    def reset(self):
+        """ Reset data of all quantitative attributes of this item
+        Returns:
+            self (object): Returns back the updated object
+        """
+        for d in self.properties:
+            getattr(self, d).reset()
+
+        for d in self.quantitativeProperties:
+            getattr(self, d).reset()
+
+        for d in self.geoProperties:
+            getattr(self, d).reset()
 
     def latest(self):
-        """ Get latest data for all properties belonging to
-        this item
+        """ Get latest data for all properties belonging to this item
+
         Returns:
             self (object): Returns back the updated object
         """
@@ -235,29 +337,31 @@ class Item(object):
         return self
 
     def during(self, start, end):
-        """Get data during a set interval for all properties belonging to
-        this item
+        """Get data during a set interval for all properties belonging to this item
+
         Args:
             startTime (string): Start time
             endTime (string): End time
+
         Returns:
             value (ndarray): numpy 2d array with 0th column as time
         """
-        self.reset()
         data = self.rs.getDataDuring(self.id, start, end)
+        self.reset()
         self.populateValue(data)
         return self
 
     def valueBetween(self, attrName, minval, maxVal):
         """Get all data during which this attribute was between min and max val
+
         Args:
             attrName (string): name of the attribute
             minVal (int): minimum value
             minVal (int): maximum value
+
         TODO:
             Specify time frame too
         """
-        self.reset()
         data = self.rs.getDataValuesBetween(self.id, attrName, minval, maxVal)
         self.populateValue(data)
 
@@ -267,12 +371,14 @@ class Item(object):
 
 class Items(MutableSequence):
     """class for a list of iudx resource items.
+
     This class extends a list to provide Class Item style functionality
     coupled with multiprocessing pool to allow for faster data access
     """
 
     def __init__(self, catUrl, items=None):
         """ PyIUDX items base class
+
         Args:
             catUrl (string): Domain name/ip of the catalogue server
         """
@@ -313,8 +419,11 @@ class Items(MutableSequence):
         return obj
 
     def latest(self):
-        """ Get latest data for all resource items of this instance and for all
+        """ Get latest data
+
+        For all resource items of this instance and for all
         properties belonging to this item
+
         Returns:
             self (object): Returns back the updated object
         """
@@ -325,11 +434,15 @@ class Items(MutableSequence):
         return self
 
     def during(self, startTime, endTime):
-        """Get data during a set interval for all resource items of this
+        """Get data during a set interval
+
+        For all resource items of this
         instance and for all properties belonging to this item
+
         Args:
             startTime (string): Start time
             endTime (string): End time
+
         Returns:
             value (ndarray): numpy 2d array with 0th column as time
         """
