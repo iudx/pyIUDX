@@ -129,7 +129,7 @@ class ResourceServer():
         opts = {"TRelation": "before", "time": time}
         return self.getData(id, opts, token)
 
-    def getDataAfer(self, id, time, token=None):
+    def getDataAfter(self, id, time, token=None):
         """Get data after a given time
 
         Args:
