@@ -22,12 +22,12 @@ This class can also be imported as a module and contains the following functions
 """
 from pyIUDX.rs import rs
 
-"""Creating a new object records of type ResourceServer from rs of pyIUDX
+"""Creating a new object resource of type ResourceServer from rs of pyIUDX
 """
 resource = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
 
 
-"""An example python script to get the status for the particular resource ID from the PUDX resource server
+"""A python snippet to get the status for the particular resource ID from the PUDX resource server
 """
 
 """ID of the resource item
@@ -38,7 +38,7 @@ status = resource.getStatus(id)
 print("Status of resource item "+ id.split("/")[3] + " at " + id.split("/")[4] + " is:-", end=" ")
 print(status)
 
-"""An example python script to get latest data available for a particular resource identified by its ID from PUDX resource server
+"""A python snippet to get latest data available for a particular resource identified by its ID from PUDX resource server
 """
 
 """ID of the resource item
@@ -49,7 +49,7 @@ latestData = resource.getLatestData(id)
 print("Latest available data for resource item "+ id.split("/")[3] + " at " + id.split("/")[4] + " is:- ")
 print(latestData)
 
-"""An example python script to get data for a particular resource identified by its ID for a time duration from PUDX resource server
+"""A python snippet to get data for a particular resource identified by its ID for a time duration from PUDX resource server
 """
 
 """ID of the resource item
@@ -63,7 +63,7 @@ data = resource.getDataDuring(id, startTime, endTime)
 print("Data from resource item "+ id.split("/")[3] + " at " + id.split("/")[4] + " for the duration between " + startTime + " to " + endTime + " is:- ")
 print(data)
 
-"""An example python script to get data for a particular resource identified by its ID for the entire time either before or after the specified time from PUDX resource server
+"""A python snippet to get data for a particular resource identified by its ID for the entire time either before or after the specified time from PUDX resource server
 """
 
 """ID of the resource item
