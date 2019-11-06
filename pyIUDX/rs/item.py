@@ -22,41 +22,41 @@ class Property(object):
     """Container class for a Property
 
     Property is an aspect of a resource item that describes it
-    or its current state
+    or its current value
     """
 
     def __init__(self, name, properties):
         self.name = name
-        self.state = None
+        self.value = None
         for p in properties.keys():
             setattr(self, p, properties[p])
         self.attributes = copy.deepcopy(self.__dict__)
         self.attributes.pop("$ref", None)
         self.attributes.pop("attributes", None)
 
-    def setState(self,  state, time=None):
+    def setValue(self,  value, time=None):
         """Set State for this Property
         Args:
             value (string): Value
             time (datetime.datetime()): Time index
         """
         if time is None:
-            self.state = state
+            self.value = value
         else:
-            self.state = np.append(self.state,
-                                   np.array([[time, state]],
+            self.value = np.append(self.value,
+                                   np.array([[time, value]],
                                             dtype=object), axis=0)
         return
 
     def reset(self):
-        if isinstance(self.state, str):
+        if isinstance(self.value, str):
             return
-        self.state = np.empty((0, 2), dtype=object)
+        self.value = np.empty((0, 2), dtype=object)
 
     def sort(self):
         """Sort time series
         """
-        self.state = self.state[np.argsort(self.state[:, 0])]
+        self.value = self.value[np.argsort(self.value[:, 0])]
 
 
 class QuantitativeProperty(object):
@@ -101,6 +101,7 @@ class QuantitativeProperty(object):
             time (datetime.datetime()): Time index
             value (float): Value
         """
+        value = float(value)
         self.value = np.append(self.value,
                                np.array([[time, value]], dtype=object), axis=0)
         return
@@ -179,6 +180,15 @@ class GeoProperty(object):
             time (datetime.datetime()): Time index
             value (float): Value
         """
+        if isinstance(coordinates, dict):
+            tp = coordinates["type"]
+            if tp == "Point":
+                coordinates = coordinates["coordinates"]
+        elif isinstance(coordinates, str):
+            coordinates = float(coordinates)
+        elif isinstance(coordinates, float):
+            pass
+
         self.coordinates = np.append(self.coordinates,
                                      np.array([[time, coordinates]],
                                               dtype=object), axis=0)
@@ -272,34 +282,40 @@ class Item(object):
                     getattr(self, key).setStaticGeo(catItem[key])
                 if (catItem[key]["type"] == "Property" and
                         key in self.properties):
-                    getattr(self, key).setState(catItem[key])
-
+                    getattr(self, key).setValue(catItem[key])
 
     def populateValue(self, data):
         """Helper function to populate a QuantitativeProperty's value array
         """
         for row in data:
             """ TODO: Assuming a datetime format is bad """
-            timestamp = datetime.datetime.strptime(row[self.timeProperty][:19],
-                                                   "%Y-%m-%dT%H:%M:%S")
+            try:
+                timestamp = datetime.datetime\
+                                .strptime(row[self.timeProperty].split("+")[0],
+                                          "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                timestamp = datetime.datetime\
+                                .strptime(row[self.timeProperty].split("+")[0],
+                                          "%Y-%m-%dT%H:%M:%S")
+
             for k in row.keys():
                 if k in self.quantitativeProperties:
                     try:
                         attr = getattr(self, k)
-                        attr.setValue(timestamp, float(row[k]))
+                        attr.setValue(timestamp, row[k])
                     except Exception as e:
                         pass
                 if k in self.geoProperties:
                     try:
                         attr = getattr(self, k)
-                        attr.setDynamicGeo(timestamp, float(row[k]))
+                        attr.setDynamicGeo(timestamp, row[k])
                     except Exception as e:
                         pass
 
                 if k in self.properties:
                     try:
                         attr = getattr(self, k)
-                        attr.setState(row[k], time=timestamp)
+                        attr.setValue(row[k], time=timestamp)
                     except Exception as e:
                         pass
 
@@ -307,7 +323,8 @@ class Item(object):
         for k in self.quantitativeProperties:
             getattr(self, k).sort()
         for k in self.geoProperties:
-            getattr(self, k).sort()
+            pass
+            #getattr(self, k).sort()
         for k in self.properties:
             getattr(self, k).sort()
 

@@ -11,7 +11,7 @@ class ItemsTest(unittest.TestCase):
         self.catalogue = cat.Catalogue("https://pudx.catalogue.iudx.org.in/catalogue/v1")
         self.itms = item.Item("https://pudx.catalogue.iudx.org.in/catalogue/v1",
                                "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live")
-        print(self.itms.properties)
+        print(self.itms.timeProperties)
 
     def test_get_latest(self):
         print(self.itms.geoProperties)
@@ -20,15 +20,21 @@ class ItemsTest(unittest.TestCase):
 
     def test_get_during(self):
         print("Getting during values")
-        self.itms.during("2019-11-04T10:00:00.000Z",
-                         "2019-11-04T10:15:00.000Z")
-        i = 0
+        self.itms.during("2019-11-06T17:00:00.000Z",
+                         "2019-11-06T17:45:00.000Z")
         print("Time\t Bus number\t Location")
-        for bus in self.itms.NAME.state:
-            print(str(bus[0]) + "\t" + str(bus[1]) + "\t" + "[" +
-                  str(self.itms.LATITUDE_STR.coordinates[i, 1]) + ", " +
-                  str(self.itms.LONGITUDE_STR.coordinates[i, 1]) + "]")
-
+        print("{0: <30}".format("Time") +
+              "{0: <30}".format("Bus Number") +
+              "{0: <30}".format("Latitude") +
+              "{0: <30}".format("Longitude"))
+        print("\n")
+        for values in zip(self.itms.ROUTE_ID.value,
+                          self.itms.LATITUDE_STR.coordinates,
+                          self.itms.LONGITUDE_STR.coordinates):
+            print("{0: <30}".format(str(values[0][0])) +
+                  "{0: <30}".format(str(values[0][1])) +
+                  "{0: <30}".format(str(values[1][1])) +
+                  "{0: <30}".format(str(values[2][1])))
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ class RSTest(unittest.TestCase):
         self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
         self.testVector = {}
         ''' TODO: Make this independent of paths '''
-        with open("./tests/testVector_itms.json", "r") as f:
+        with open("./tests/testVector_flood.json", "r") as f:
             self.testVector = json.load(f)
 
     def test_get_latest(self):
