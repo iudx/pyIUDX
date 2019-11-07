@@ -101,9 +101,13 @@ class QuantitativeProperty(object):
             time (datetime.datetime()): Time index
             value (float): Value
         """
-        value = float(value)
-        self.value = np.append(self.value,
-                               np.array([[time, value]], dtype=object), axis=0)
+        try:
+            value = float(value)
+            self.value = np.append(self.value,
+                                   np.array([[time, value]], dtype=object),
+                                   axis=0)
+        except:
+            pass
         return
 
     def latest(self):
@@ -181,11 +185,17 @@ class GeoProperty(object):
             value (float): Value
         """
         if isinstance(coordinates, dict):
-            tp = coordinates["type"]
-            if tp == "Point":
-                coordinates = coordinates["coordinates"]
+            try:
+                tp = coordinates["type"]
+                if tp == "Point":
+                    coordinates = coordinates["coordinates"]
+            except:
+                pass
         elif isinstance(coordinates, str):
-            coordinates = float(coordinates)
+            try:
+                coordinates = float(coordinates)
+            except:
+                pass
         elif isinstance(coordinates, float):
             pass
 
@@ -289,35 +299,32 @@ class Item(object):
         """
         for row in data:
             """ TODO: Assuming a datetime format is bad """
+            timeNoFloat = 0
             try:
                 timestamp = datetime.datetime\
                                 .strptime(row[self.timeProperty].split("+")[0],
                                           "%Y-%m-%dT%H:%M:%S.%f")
             except:
-                timestamp = datetime.datetime\
-                                .strptime(row[self.timeProperty].split("+")[0],
-                                          "%Y-%m-%dT%H:%M:%S")
+                timeNoFloat = 1
+                pass
+            if timeNoFloat == 1:
+                try:
+                    timestamp = datetime.datetime\
+                                    .strptime(row[self.timeProperty].split("+")[0],
+                                              "%Y-%m-%dT%H:%M:%S")
+                except:
+                    continue
 
             for k in row.keys():
                 if k in self.quantitativeProperties:
-                    try:
-                        attr = getattr(self, k)
-                        attr.setValue(timestamp, row[k])
-                    except Exception as e:
-                        pass
+                    attr = getattr(self, k)
+                    attr.setValue(timestamp, row[k])
                 if k in self.geoProperties:
-                    try:
-                        attr = getattr(self, k)
-                        attr.setDynamicGeo(timestamp, row[k])
-                    except Exception as e:
-                        pass
-
+                    attr = getattr(self, k)
+                    attr.setDynamicGeo(timestamp, row[k])
                 if k in self.properties:
-                    try:
-                        attr = getattr(self, k)
-                        attr.setValue(row[k], time=timestamp)
-                    except Exception as e:
-                        pass
+                    attr = getattr(self, k)
+                    attr.setValue(row[k], time=timestamp)
 
         """Sort time series """
         for k in self.quantitativeProperties:

@@ -10,7 +10,7 @@ class ItemsTest(unittest.TestCase):
     def setUpClass(self):
         self.catalogue = cat.Catalogue("https://pudx.catalogue.iudx.org.in/catalogue/v1")
         self.itms = item.Item("https://pudx.catalogue.iudx.org.in/catalogue/v1",
-                               "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live")
+                              "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live")
         print(self.itms.timeProperties)
 
     def test_get_latest(self):
@@ -20,8 +20,8 @@ class ItemsTest(unittest.TestCase):
 
     def test_get_during(self):
         print("Getting during values")
-        self.itms.during("2019-11-06T17:00:00.000Z",
-                         "2019-11-06T17:45:00.000Z")
+        self.itms.during("2019-11-06T11:00:00.000+05:30",
+                         "2019-11-06T11:55:00.000+05:30")
         print("Time\t Bus number\t Location")
         print("{0: <30}".format("Time") +
               "{0: <30}".format("Bus Number") +

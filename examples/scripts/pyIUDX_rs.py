@@ -56,8 +56,8 @@ print(latestData)
 """
 id = "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Karve Statue Square_5"
 
-startTime = "2019-10-30T00:00:00.000Z"
-endTime = "2019-11-01T00:00:00.000Z"
+startTime = "2019-10-30T00:00:00.000+05:30"
+endTime = "2019-11-01T00:00:00.000+05:30"
 
 data = resource.getDataDuring(id, startTime, endTime)
 print("Data from resource item "+ id.split("/")[3] + " at " + id.split("/")[4] + " for the duration between " + startTime + " to " + endTime + " is:- ")
@@ -70,7 +70,7 @@ print(data)
 """
 id = "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Karve Statue Square_5"
 
-time = "2019-10-30T00:00:00.000Z"
+time = "2019-10-30T00:00:00.000+05:30"
 
 data = resource.getDataAfter(id, time)
 print("Data from resource item "+ id.split("/")[3] + " at " + id.split("/")[4] + " after " + time + " is:- ")

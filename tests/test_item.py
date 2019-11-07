@@ -19,6 +19,7 @@ class ItemsTest(unittest.TestCase):
         self.aqms = item.Items("https://pudx.catalogue.iudx.org.in/catalogue/v1",
                                items=itemList)
         print("Getting " + str(len(itemList)) + " items")
+        print(self.aqms[0].geoProperties)
 
     def test_get_latest(self):
         print("All quantitativeProperties")
@@ -29,8 +30,8 @@ class ItemsTest(unittest.TestCase):
 
     def test_get_during(self):
         print("Getting during values")
-        self.aqms.during("2019-11-04T10:00:00.000Z",
-                         "2019-11-04T12:00:00.000Z")
+        self.aqms.during("2019-11-06T17:00:00.000+05:30",
+                         "2019-11-06T17:30:00.000+05:30")
         print(self.aqms[1].CO2_MIN.value)
 
 
