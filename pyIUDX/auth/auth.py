@@ -72,7 +72,7 @@ class Auth():
             else:
                 assert (type(tokens) == type([]))  # must be a list
                 body = {'tokens': tokens}
-        return self.call("introspect", body)
+        return self.call("revoke", body)
 
     def audit_tokens(self, hours):
         body = {'hours': hours}
