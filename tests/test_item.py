@@ -31,7 +31,7 @@ class ItemsTest(unittest.TestCase):
     def test_get_during(self):
         print("Getting during values")
         self.aqms.during("2019-11-06T17:00:00.000+05:30",
-                         "2019-11-06T17:30:00.000+05:30")
+                         "2019-11-06T18:30:00.000+05:30")
         print(self.aqms[1].CO2_MIN.value)
 
 

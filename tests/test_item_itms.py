@@ -20,8 +20,8 @@ class ItemsTest(unittest.TestCase):
 
     def test_get_during(self):
         print("Getting during values")
-        self.itms.during("2019-11-06T11:00:00.000+05:30",
-                         "2019-11-06T11:55:00.000+05:30")
+        self.itms.during("2019-11-07T16:00:00.000+05:30",
+                         "2019-11-07T16:30:00.000+05:30")
         print("Time\t Bus number\t Location")
         print("{0: <30}".format("Time") +
               "{0: <30}".format("Bus Number") +
