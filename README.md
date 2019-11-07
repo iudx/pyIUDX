@@ -23,3 +23,4 @@ https://pyiudx.readthedocs.io/en/latest/
 
 ## Usage Examples
 The tests directory and the examples directory contain further usage examples.
+[Examples][examples/scripts]
