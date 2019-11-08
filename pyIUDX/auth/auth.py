@@ -78,8 +78,8 @@ class Auth():
         body = {'hours': hours}
         return self.call("audit/tokens", body)
 
-    def add_consumer_to_group(self, consumer, group):
-        body = {'consumer': consumer, 'group': group}
+    def add_consumer_to_group(self, consumer, group, valid_till):
+        body = {'consumer': consumer, 'group': group, 'valid-till' : valid_till}
         return self.call("group/add", body)
 
     def delete_consumer_from_group(self, consumer, group):
