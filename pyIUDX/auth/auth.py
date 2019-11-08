@@ -55,23 +55,18 @@ class Auth():
             body['server-token'] = server_token
         return self.call("introspect", body)
 
-    def revoke_token(self, tokens, token_hashes=None):
-        if token_hashes:
-            # either tokens or token-hashes must be provided, not both
-            assert (tokens is None)
-            if type(token_hashes) is type('string'):
-                body = {'token-hashes': [token_hashes]}
-            else:
-                assert (isinstance(token_hashes, list))  # must be a list
-                body = {'token-hashes': token_hashes}
+    def revoke_tokens(self, tokens):
+        if type(tokens) is type('string'):
+            body = {'tokens': [tokens]}
         else:
-            # either tokens or token-hashes must be provided, not both
-            assert (token_hashes is None)
-            if type(tokens) is type('string'):
-                body = {'tokens': [tokens]}
-            else:
-                assert (type(tokens) == type([]))  # must be a list
-                body = {'tokens': tokens}
+            body = {'tokens': tokens}
+        return self.call("revoke", body)
+
+    def revoke_token_hashes(self, token_hashes):
+        if type(token_hashes) is type('string'):
+            body = {'token-hashes': [token_hashes]}
+        else:
+            body = {'token-hashes': token_hashes}
         return self.call("revoke", body)
 
     def audit_tokens(self, hours):
