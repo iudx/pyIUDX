@@ -16,6 +16,10 @@ pip install git+https://github.com/iudx/pyIUDX
 A simple IPython notebook going throught the entire process flow can be found here.
 [Notebook](examples/pyIUDX_sample_usecases.ipynb)
 
+A google collab notebook is also available.
+https://colab.research.google.com/drive/1rf8dFKEsTfaDWTh1K3gK8M5EXZNUC-V8
+
+
 ## API Docs
 Further documentation on low level apis and their usage can be found here
 https://pyiudx.readthedocs.io/en/latest/
