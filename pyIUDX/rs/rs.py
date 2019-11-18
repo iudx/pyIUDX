@@ -1,5 +1,4 @@
 import requests
-import pkg_resources
 import json
 
 
@@ -76,13 +75,10 @@ class ResourceServer():
         resp = self.search(self.rsUrl, data)
         if resp.status_code == 400:
             raise Warning("Bad request. Check query body")
-            return []
         if resp.status_code == 429:
             raise Warning("Too many requests")
-            return []
         if resp.status_code == 401:
             raise Warning("Invalid credentials")
-            return []
         if resp.status_code == 200:
             return resp.json()
 

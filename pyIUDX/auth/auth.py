@@ -1,128 +1,106 @@
-# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
-
 import sys
 import json
 import requests
 
+""" TODO: Insert pydocString """
+
+
 class Auth():
-#{
-	def __init__(self, certificate, key, auth_server="auth.iudx.org.in", version=1):
-	#
-		self.url		= "https://" + auth_server + "/auth/v" + str(version)
-	        self.credentials	= (certificate, key)
-	#
+    def __init__(self, certificate, key, auth_server="auth.iudx.org.in", version=1):
+        self.url = "https://" + auth_server + "/auth/v" + str(version)
+        self.credentials = (certificate, key)
 
-	def call(self, api, body=None):
-	#
-		ret = "success"
+    def call(self, api, body=None):
+        ret = "success"
+        body = json.dumps(body)
+        response = requests.post(
+            url=self.url + "/" + api,
+            verify=True,
+            cert=self.credentials,
+            data=body,
+            headers={"content-type": "application/json"}
+        )
 
-		body = json.dumps(body)
+        if response.status_code != 200:
+            sys.stderr.write(
+                "WARNING: auth API failure  | " +
+                self.url + "/" + api + " | " +
+                response.reason + " | " +
+                response.text
+            )
 
-		response = requests.post (
-			url	= self.url + "/" + api,
-			verify	= True,
-			cert	= self.credentials,
-			data	= body,
-			headers	= {"content-type":"application/json"}
-		)
+            ret = "failed"
 
-		if response.status_code != 200:
-		#
-			sys.stderr.write (
-				"WARNING: auth API failure  | "	+
-				self.url + "/" + api	+ " | "	+
-				response.reason 	+ " | "	+
-				response.text
-			)
+        if response.headers['content-type'] == 'application/json':
+            return [ret, json.loads(response.text)]
+        else:
+            sys.stderr.write(
+                "WARNING: auth did not send 'application/json'"
+            )
+            return ["failed", None]
 
-			ret = "failed"
-		#
+    def get_token(self, request, token_time=None, existing_token=None):
+        body = {'request': request}
 
-		if response.headers['content-type'] == 'application/json':
-			return [ret, json.loads(response.text)]
-		else:
-		#
-			sys.stderr.write (
-				"WARNING: auth did not send 'application/json'"
-			)
+        if token_time:
+            body['token-time'] = token_time
 
-			return ["failed", None]
-		#
-	#
+        if existing_token:
+            body['existing-token'] = existing_token
 
-	def get_token(self, request, token_time=None, existing_token=None):
-	#
-		body = {'request': request}
+        return self.call("token", body)
 
-		if token_time:
-			body['token-time'] = token_time
+    def get_policy(self):
+        return self.call("acl")
 
-		if existing_token:
-			body['existing-token'] = existing_token
+    def set_policy(self, policy):
+        body = {'policy': policy}
+        return self.call("acl/set", body)
 
-		return self.call("token", body)
-	#
+    def append_policy(self, policy):
+        body = {'policy': policy}
+        return self.call("acl/append", body)
 
-	def get_policy(self):
-		return self.call("acl")
+    def introspect_token(self, token, server_token=None):
+        body = {'token': token}
 
-	def set_policy(self, policy):
-        	body = {'policy': policy}
-		return self.call("acl/set", body)
+        if server_token:
+            body['server-token'] = server_token
 
-	def append_policy(self, policy):
-		body = {'policy': policy}
-		return self.call("acl/append", body)
+        return self.call("introspect", body)
 
-	def introspect_token(self, token, server_token=None):
-	#
-		body = {'token': token}
+    def revoke_tokens(self, tokens):
+        if type(tokens) is type([]):
+            body = {'tokens': tokens}
+        else:
+            body = {'tokens': [tokens]}
 
-		if server_token:
-			body['server-token'] = server_token
+        return self.call("revoke", body)
 
-		return self.call("introspect", body)
-	#
+    def revoke_token_hashes(self, token_hashes):
+        if type(token_hashes) is type([]):
+            body = {'token-hashes': token_hashes}
+        else:
+            body = {'token-hashes': [token_hashes]}
 
-	def revoke_tokens(self, tokens):
-	#
-		if type(tokens) is type([]):
-			body = {'tokens': tokens}
-		else:
-			body = {'tokens': [tokens]}
+        return self.call("revoke", body)
 
-        	return self.call("revoke", body)
-	#
+    def audit_tokens(self, hours):
+        body = {'hours': hours}
+        return self.call("audit/tokens", body)
 
-	def revoke_token_hashes(self, token_hashes):
-	#
-		if type(token_hashes) is type([]):
-			body = {'token-hashes': token_hashes}
-		else:
-			body = {'token-hashes': [token_hashes]}
+    def add_consumer_to_group(self, consumer, group, valid_till):
+        body = {'consumer': consumer, 'group': group, 'valid-till': valid_till}
+        return self.call("group/add", body)
 
-		return self.call("revoke", body)
-	#
+    def delete_consumer_from_group(self, consumer, group):
+        body = {'consumer': consumer, 'group': group}
+        return self.call("group/delete", body)
 
-	def audit_tokens(self, hours):
-		body = {'hours': hours}
-		return self.call("audit/tokens", body)
+    def list_group(self, consumer, group=None):
+        body = {'consumer': consumer}
 
-	def add_consumer_to_group(self, consumer, group, valid_till):
-		body = {'consumer': consumer, 'group': group, 'valid-till' : valid_till}
-		return self.call("group/add", body)
+        if group:
+            body['group'] = group
 
-	def delete_consumer_from_group(self, consumer, group):
-		body = {'consumer': consumer, 'group': group}
-		return self.call("group/delete", body)
-
-	def list_group(self, consumer, group=None):
-	#
-		body = {'consumer': consumer}
-
-		if group:
-			body['group'] = group
-
-		return self.call("group/list", body)
-	#
-#}
+        return self.call("group/list", body)
