@@ -17,7 +17,7 @@ A simple IPython notebook going throught the entire process flow can be found he
 [Notebook](examples/pyIUDX_sample_usecases.ipynb)
 
 A google collab notebook is also available.
-https://colab.research.google.com/drive/1rf8dFKEsTfaDWTh1K3gK8M5EXZNUC-V8
+https://colab.research.google.com/github/iudx/pyIUDX/blob/master/examples/pyIUDX_sample_usecases.ipynb
 
 
 ## API Docs
