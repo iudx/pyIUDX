@@ -1,0 +1,1208 @@
+{
+	"info": {
+		"_postman_id": "2e0b418d-ba88-4ee9-bfaf-e81a56752b42",
+		"name": "IUDX RS Connector",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search - Latest Data of a Resource",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "token",
+						"value": "token",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t \"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"options\": \"latest\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx.resourceserver.iudx.org.in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Temporal Query (During)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-11-01T00:00:00+05:30/2019-11-15T00:00:00+05:30\",\n\t\"TRelation\": \"during\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Temporal Query (During)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-11-01T00:00:00+05:30/2019-11-15T00:00:00+05:30\",\n\t\"TRelation\": \"during\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Temporal Query (Before)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-11-06T12:33:28.000+05:30\",\n\t\"TRelation\": \"before\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Temporal Query (Before)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-11-18T00:00:00.000+05:30\",\n\t\"TRelation\": \"before\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Temporal Query (After)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-11-06T12:33:28.000+05:30\",\n\t\"TRelation\": \"after\",\n\t\"attribute-filter\":[\"LASTUPDATEDATETIME\"]\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Temporal Query (After)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-11-18T00:00:00.000+05:30\",\n\t\"TRelation\": \"after\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Temporal Query (Equals)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"time\": \"2019-09-26T06:18:54.717Z\",\n\t\"TRelation\": \"TEquals\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Temporal Query (Equals)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/changebhai/crowd-sourced-images\",\n\t\"time\": \"2019-09-26T06:18:54.717Z\",\n\t\"TRelation\": \"TEquals\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Query (Circle) - Data of a resource",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"lat\": \"18.56581555\",\n\t\"lon\":\"73.77567708\",\n\t\"radius\":\"50\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count + Spatial Query (Circle) - Data of a resource",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"lat\": \"18.56581555\",\n\t\"lon\":\"73.77567708\",\n\t\"radius\":\"5000\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Response Filter - Temporal Query (Before) with attribute-filter",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"time\": \"2019-09-26T06:18:54.717Z\",\n\t\"TRelation\": \"before\",\n\t\"attribute-filter\" : [\"LASTUPDATEDATETIME\"] \n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Query (Circle) + Response Filter",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"lat\": \"18.56581555\",\n\t\"lon\":\"73.77567708\",\n\t\"radius\":\"500\",\n\t\"attribute-filter\" : [\"LASTUPDATEDATETIME\", \"ROUTE_ID\", \"TRIP_ID\"]\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Response Filter - Latest Data with attribute-filter of a Resource",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"options\": \"latest\",\n\t\"attribute-filter\":[\"LASTUPDATEDATETIME\"]\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsGreaterThan)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyisgreaterthan\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsGreaterThan)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"1000\",\n\t\"comparison-operator\": \"propertyisgreaterthan\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsLike)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"CATEGORY\",\n\t\"attribute-value\": \"MODERATE\",\n\t\"comparison-operator\": \"propertyislike\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsLike)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"CATEGORY\",\n\t\"attribute-value\": \"MODERATE\",\n\t\"comparison-operator\": \"propertyislike\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsBetween)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"300,2200\",\n\t\"comparison-operator\": \"propertyisbetween\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsBetween)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"300,2200\",\n\t\"comparison-operator\": \"propertyisbetween\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsLessThan)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyislessthan\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsLessThan)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyislessthan\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"attribute-name\" : \"ROUTE_ID\",\n\t\"attribute-value\": \"347\",\n\t\"comparison-operator\": \"propertyisequalto\"\n\t\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"1619.273\",\n\t\"comparison-operator\": \"propertyisequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsNotEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyisnotequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsNotEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyisnotequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsGreaterThanEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyisgreaterthanequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsGreaterThanEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyisgreaterthanequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search (PropertyIsLessThanEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyislessthanequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Attribute Search (PropertyIsLessThanEqualTo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pscdcl/aqm-bosch-climo/Ambedkar society circle_29\",\n\t\"attribute-name\" : \"LIGHT\",\n\t\"attribute-value\": \"2900\",\n\t\"comparison-operator\": \"propertyislessthanequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Temporal Query (During) + Attribute Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/changebhai/crowd-sourced-images\",\n\t\"time\": \"2019-11-01T00:00:00+05:30/2019-11-15T00:00:00+05:30\",\n\t\"TRelation\": \"during\",\n\t\"attribute-name\" : \"longitude\",\n\t\"attribute-value\": \"73.760989\",\n\t\"comparison-operator\": \"propertyisequalto\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Complex Search + Spatial Query (Circle)  + Temporal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"lat\": \"18.56581555\",\n\t\"lon\":\"73.77567708\",\n\t\"radius\":\"500\",\n\t\"time\": \"2019-11-14T00:00:00+05:30/2019-11-15T00:00:00+05:30\",\n\t\"TRelation\": \"during\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Complex Search - Spatial Query (Circle) + Temporal + Attribute",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\" : \"rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live\",\n\t\"lat\": \"18.56581555\",\n\t\"lon\":\"73.77567708\",\n\t\"radius\":\"500\",\n\t\"time\": \"2019-11-14T00:00:00+05:30/2019-11-15T00:00:00+05:30\",\n\t\"TRelation\": \"during\",\n\t\"attribute-name\" : \"ROUTE_ID\",\n\t\"attribute-value\": \"347\",\n\t\"comparison-operator\": \"propertyisequalto\",\n\t\"attribute-filter\":[\"CURRENT_STATUS\",\"ROUTE_ID\", \"LASTUPDATEDATETIME\"]\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"resourceserver",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "token",
+						"value": "token",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"resourceServerGroup\" : \"urn:iudx-catalogue-pune:pudx-resource-server/aqm-bosch-climo\",\n\t\"options\": \"all\"\n}"
+				},
+				"url": {
+					"raw": "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1/download",
+					"protocol": "https",
+					"host": [
+						"pudx.resourceserver.iudx.org.in"
+					],
+					"path": [
+						"resource-server",
+						"pscdcl",
+						"v1",
+						"download"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

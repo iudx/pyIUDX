@@ -1,0 +1,517 @@
+{
+	"info": {
+		"_postman_id": "b0ea9a5c-f07c-4c04-8727-f495496d6056",
+		"name": "IUDX Catalogue ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search - List all items in Catalogue",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search - List all items based on tags",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?attribute-name=(tags)&attribute-value=(pollution)",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "attribute-name",
+							"value": "(tags)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "(pollution)"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search - List all items based on tags - (multiple)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?attribute-name=(tags)&attribute-value=((traffic,pollution))",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "attribute-name",
+							"value": "(tags)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "((traffic,pollution))"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Search ( Circle ) - Count the number of items in a given proximity search (lat, lon, radius)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?lat=18.5529659&lon= 73.879657&radius=2000",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "18.5529659"
+						},
+						{
+							"key": "lon",
+							"value": " 73.879657"
+						},
+						{
+							"key": "radius",
+							"value": "2000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Search (Bbox)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?bbox=18.4,73.9,28.6,80.2&relation=within",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "bbox",
+							"value": "18.4,73.9,28.6,80.2"
+						},
+						{
+							"key": "relation",
+							"value": "within"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Search (Polygon)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?geometry=polygon((18.4,73.9,21.6,78.9,27.1,80,30,75.25,25.7,74.7,18.4,73.9))&relation=within",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "geometry",
+							"value": "polygon((18.4,73.9,21.6,78.9,27.1,80,30,75.25,25.7,74.7,18.4,73.9))"
+						},
+						{
+							"key": "relation",
+							"value": "within"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Search (LineString)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?geometry=linestring(18.56,73.83,18.49,73.8)&relation=intersects",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "geometry",
+							"value": "linestring(18.56,73.83,18.49,73.8)"
+						},
+						{
+							"key": "relation",
+							"value": "intersects"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Response Filter - List all items in the Catalogue with attribute filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?attribute-filter=(tags,id)",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "attribute-filter",
+							"value": "(tags,id)"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Attribute Search + Response Filter - List all id's items based on tags",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?attribute-name=(tags)&attribute-value=((traffic,pollution))&attribute-filter=(id)",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "attribute-name",
+							"value": "(tags)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "((traffic,pollution))"
+						},
+						{
+							"key": "attribute-filter",
+							"value": "(id)"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Attribute Search (tags) + Spatial Search ( Circle ) - List items based on tags and proximity search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?attribute-name=(tags)&attribute-value=(pollution)&lat=18.5529659&lon= 73.879657&radius=2000",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "attribute-name",
+							"value": "(tags)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "(pollution)"
+						},
+						{
+							"key": "lat",
+							"value": "18.5529659"
+						},
+						{
+							"key": "lon",
+							"value": " 73.879657"
+						},
+						{
+							"key": "radius",
+							"value": "2000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Attribute Search (tags) + Spatial Search ( Circle ) + Response Filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?attribute-name=(tags)&attribute-value=(pollution)&lat=18.5529659&lon= 73.879657&radius=2000&attribute-filter=(tags,id)",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "attribute-name",
+							"value": "(tags)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "(pollution)"
+						},
+						{
+							"key": "lat",
+							"value": "18.5529659"
+						},
+						{
+							"key": "lon",
+							"value": " 73.879657"
+						},
+						{
+							"key": "radius",
+							"value": "2000"
+						},
+						{
+							"key": "attribute-filter",
+							"value": "(tags,id)"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search + Spatial Search (Polygon) + Multi-Attribute Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/search?geometry=polygon((18.4,73.9,21.6,78.9,27.1,80,30,75.25,25.7,74.7,18.4,73.9))&relation=within&attribute-name=(tags,provider,resourceServerGroup)&attribute-value=((streetlight,flood),(pscdcl),(flood-sensor))",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "geometry",
+							"value": "polygon((18.4,73.9,21.6,78.9,27.1,80,30,75.25,25.7,74.7,18.4,73.9))"
+						},
+						{
+							"key": "relation",
+							"value": "within"
+						},
+						{
+							"key": "attribute-name",
+							"value": "(tags,provider,resourceServerGroup)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "((streetlight,flood),(pscdcl),(flood-sensor))"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count - Total number of items in Catalogue",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/count",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count + Attribute Search (tags) + Spatial Search ( Circle ) - Count items based on tags and proximity search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pudx.catalogue.iudx.org.in/catalogue/v1/count?attribute-name=(tags)&attribute-value=(traffic)&lat=18.5529659&lon= 73.879657&radius=200000",
+					"protocol": "https",
+					"host": [
+						"pudx",
+						"catalogue",
+						"iudx",
+						"org",
+						"in"
+					],
+					"path": [
+						"catalogue",
+						"v1",
+						"count"
+					],
+					"query": [
+						{
+							"key": "attribute-name",
+							"value": "(tags)"
+						},
+						{
+							"key": "attribute-value",
+							"value": "(traffic)"
+						},
+						{
+							"key": "lat",
+							"value": "18.5529659"
+						},
+						{
+							"key": "lon",
+							"value": " 73.879657"
+						},
+						{
+							"key": "radius",
+							"value": "200000"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
