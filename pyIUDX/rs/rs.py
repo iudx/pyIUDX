@@ -52,6 +52,49 @@ class ResourceServer():
         return requests.post(url, data=json.dumps(data),
                              headers=headers, cert=self.cert)
 
+    def download(self, url, data):
+        """ Use requests library to make a search request
+
+        Returns:
+            resp (object): Response body
+        """
+        url = url + "/download"
+        headers = {"Content-Type": "application/json"}
+        return requests.post(url, data=json.dumps(data),
+                             headers=headers, cert=self.cert)
+
+
+    def downloadData(self, groupId, opts=None, token=None):
+        """Download data from a resource server
+
+        An optional options dictionary can be passed to
+        get more specific data.
+        The options dictionary follows the schema:
+        https://raw.githubusercontent.com/iudx/pyIUDX/rs/pyIUDX/rs/opts.json
+
+        Args:
+            groupId (string): id of the resource item
+            opts (Dict): dictionary of various options
+        Returns:
+            url (string): rs constructed url
+        """
+        opts = {"options": "all"}
+        idDict = {"resourceServerGroup": groupId}
+        if token is not None:
+            tokenDict = {"token": token}
+            data = {**idDict, **opts, **tokenDict}
+        else:
+            data = {**idDict, **opts}
+        resp = self.download(self.rsUrl, data)
+        if resp.status_code == 400:
+            raise Warning("Bad request. Check query body")
+        if resp.status_code == 429:
+            raise Warning("Too many requests")
+        if resp.status_code == 401:
+            raise Warning("Invalid credentials")
+        if resp.status_code == 200:
+            return resp.json()
+
     def getData(self, id, opts=None, token=None):
         """Get data from a resource server
 
@@ -110,6 +153,10 @@ class ResourceServer():
         timeString = startTime + "/" + endTime
         opts = {"TRelation": "during", "time": timeString}
         return self.getData(id, opts, token)
+
+
+
+
 
     def getDataBefore(self, id, time, token=None):
         """Get data before a given time
