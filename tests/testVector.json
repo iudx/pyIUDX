@@ -1,15 +1,63 @@
 {
     "latest": [
         "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Karve Statue Square_5",
-        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/Chitale Bandhu Corner_41",
         "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/flood-sensor/Vishrantwadi Nala",
-        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/flood-sensor/Maharishi Shinde Bridge"
+        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/flood-sensor/Maharishi Shinde Bridge",
+        "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live"
     ],
     "during": [
         {
             "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4",
             "startTime": "2019-11-06T12:00:00.000+05:30",
             "endTime": "2019-11-06T12:30:00.000+05:30"
+        },
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live",
+            "startTime": "2019-11-25T12:00:00.000+05:30",
+            "endTime": "2019-11-25T12:05:00.000+05:30"
+
+        }
+    ],
+    "likeLatest": [
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4",
+            "attributeName": "DEVICEID",
+            "attributeValue": "02f7e7ee-29d6-c1c1-4d98-8f74981d9683-sensoragent"
+        }
+    ],
+    "likeDuring": [
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live",
+            "attributeName": "ROUTE_ID",
+            "attributeValue": "148",
+            "startTime":"2019-11-25T16:00:07.761+05:30",
+            "endTime":"2019-11-25T16:09:07.761+05:30"
+        }
+    ],
+    "between": [
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/aqm-bosch-climo/ABC Farm House Junction_4",
+            "attributeName": "LIGHT",
+            "minVal": "0",
+            "maxVal": "50"
+        }
+    ],
+    "around": [
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live",
+            "point": [18.506441, 73.8837],
+            "radius": 5000
+
+        }
+    ],
+    "aroundDuring": [
+        {
+            "id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/pune-itms/pune-itms-live",
+            "point": [18.506441, 73.8837],
+            "radius": 5000,
+            "startTime": "2019-11-25T06:00:00.000+05:30",
+            "endTime": "2019-11-25T12:05:00.000+05:30"
         }
     ]
+
 }

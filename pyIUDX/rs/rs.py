@@ -155,9 +155,6 @@ class ResourceServer():
         return self.getData(id, opts, token)
 
 
-
-
-
     def getDataBefore(self, id, time, token=None):
         """Get data before a given time
 
@@ -186,12 +183,32 @@ class ResourceServer():
         opts = {"TRelation": "after", "time": time}
         return self.getData(id, opts, token)
 
-    def getDataAround(self, id, point, radius, token=None):
+    def getDataAroundDuring(self, id, point, radius, startTime, endTime, token=None):
+        """Get data around a specific point(lat, lon) and radius(meters) and during a time
+
+        Args:
+            id (string): id of the resource item
+            point (List[Float]): point [lat, lon]
+            radius (int): radius in meters
+            startTime (string): Starting from
+            endTime (string): Till
+
+        Returns:
+            data (List[Dict]): Array with a time indexed dictionary
+                                item corresponding to the data
+        """
+        timeString = startTime + "/" + endTime
+        opts = {"lat": str(point[0]), "lon": str(point[1]),
+                "radius": str(radius), "TRelation": "during",
+                "time": timeString}
+        return self.getData(id, opts, token)
+
+    def getLatestDataAround(self, id, point, radius, token=None):
         """Get data around a specific point(lat, lon) and radius(meters)
 
         Args:
             id (string): id of the resource item
-            point (List[String]): point [lat, lon]
+            point (List[Float]): point [lat, lon]
             radius (int): radius in meters
 
         Returns:
@@ -202,8 +219,50 @@ class ResourceServer():
                 "radius": str(radius)}
         return self.getData(id, opts, token)
 
-    def getDataValuesLike(self, id, attribute, val, token=None):
-        """Get data of an item for which an attribute is like value
+    def getLatestDataAroundLike(self, id, point, radius, attributeName, attributeValue, token=None):
+        """Get data around a specific point(lat, lon) and radius(meters)            which has an attribute like
+
+        Args:
+            id (string): id of the resource item
+            point (List[Float]): point [lat, lon]
+            radius (int): radius in meters
+
+        Returns:
+            data (List[Dict]): Array with a time indexed dictionary
+                                item corresponding to the data
+        """
+        opts = {"lat": str(point[0]), "lon": str(point[1]),
+                "radius": str(radius),
+                "comparison-operator": "propertyisequalto",
+                "attribute-name": attributeName,
+                "attribute-value": attributeValue}
+        return self.getData(id, opts, token)
+
+    def getDataValuesLikeDuring(self, id, attribute, val, startTime, endTime, token=None):
+        """Get data of an item for which an attribute is like value between a time
+
+        Args:
+            id (string): id of the resource item
+            attribute (string): attribute name
+            val (string): value
+
+        Returns:
+            data (List[Dict]): Array with a time indexed dictionary
+                                item corresponding to the data
+        """
+        timeString = startTime + "/" + endTime
+        opts = {"attribute-name": attribute,
+                "TRelation": "during",
+                "time": timeString,
+                "attribute-value": val,
+                "comparison-operator": "propertyisequalto",
+                "startTime": startTime,
+                "endTime": endTime}
+        return self.getData(id, opts, token)
+
+
+    def getLatestDataValuesLike(self, id, attribute, val, token=None):
+        """Get latest data of an item for which an attribute is like value
 
         Args:
             id (string): id of the resource item
@@ -216,7 +275,7 @@ class ResourceServer():
         """
         opts = {"attribute-name": attribute,
                 "attribute-value": val,
-                "comparison-operator": "propertyislike",
+                "comparison-operator": "propertyisequalto",
                 "options": "latest"}
         return self.getData(id, opts, token)
 
@@ -271,10 +330,10 @@ class ResourceServer():
         """
         opts = {"attribute-name": attribute,
                 "attribute-value": str(minVal) + "," + str(maxVal),
-                "comparison-operator": "propertyisbetween",
-                "options": "latest"}
+                "comparison-operator": "propertyisbetween"}
         print(opts)
         return self.getData(id, opts, token)
+
 
     def getStatus(self, id, token=None):
         """Get Status of a resource item
