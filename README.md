@@ -1,5 +1,7 @@
 # pyIUDX - Python SDK for IUDX
 
+[![Documentation Status](https://readthedocs.org/projects/pyiudx/badge/?version=latest)](https://pyiudx.readthedocs.io/en/latest/?badge=latest)
+
 ![alt text](https://github.com/iudx/pyIUDX/blob/master/docs/pyIUDX.png "pyIUDX")
 
 Simplifies using the India Urban Data Exchange [IUDX](https://iudx.org.in) platform. 

@@ -4,6 +4,20 @@ sys.path.insert(1, '../pyIUDX')
 from pyIUDX.rs import item
 from pyIUDX.cat import cat
 
+def printer(item):
+    print("Time\t Bus number\t Location")
+    print("{0: <30}".format("Time") +
+          "{0: <30}".format("Bus Number") +
+          "{0: <30}".format("Latitude") +
+          "{0: <30}".format("Longitude"))
+    print("\n")
+    for values in zip(item.ROUTE_ID.value,
+                      item.LATITUDE_STR.coordinates,
+                      item.LONGITUDE_STR.coordinates):
+        print("{0: <30}".format(str(values[0][0])) +
+              "{0: <30}".format(str(values[0][1])) +
+              "{0: <30}".format(str(values[1][1])) +
+              "{0: <30}".format(str(values[2][1])))
 
 class ItemsTest(unittest.TestCase):
     @classmethod
@@ -22,19 +36,13 @@ class ItemsTest(unittest.TestCase):
         print("Getting during values")
         self.itms.during("2019-11-07T16:00:00.000+05:30",
                          "2019-11-07T16:30:00.000+05:30")
-        print("Time\t Bus number\t Location")
-        print("{0: <30}".format("Time") +
-              "{0: <30}".format("Bus Number") +
-              "{0: <30}".format("Latitude") +
-              "{0: <30}".format("Longitude"))
-        print("\n")
-        for values in zip(self.itms.ROUTE_ID.value,
-                          self.itms.LATITUDE_STR.coordinates,
-                          self.itms.LONGITUDE_STR.coordinates):
-            print("{0: <30}".format(str(values[0][0])) +
-                  "{0: <30}".format(str(values[0][1])) +
-                  "{0: <30}".format(str(values[1][1])) +
-                  "{0: <30}".format(str(values[2][1])))
+        printer(self.itms)
+
+    def test_get_latest_with(self):
+        print("Getting Latest for a bus")
+        self.itms.latestWith("ROUTE_ID", "148")
+        printer(self.itms)
+        
 
 
 if __name__ == '__main__':

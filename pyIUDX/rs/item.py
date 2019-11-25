@@ -375,6 +375,25 @@ class Item(object):
         self.populateValue(data)
         return self
 
+    def latestWith(self, attr, val):
+        """ Get latest data for all properties belonging to this item with a specific attribute
+            
+            This method will give latest data where an attribute is specified. For e.g 
+            attr = "ROUTE_ID", val = "110" will give latest data for that bus
+
+        Args:
+            attr (string): The name of the attribute
+            val (string): The value of the attribute
+
+        Returns:
+            self (object): Returns back the updated object
+        """
+        data = self.rs.getLatestDataValuesLike(self.id, attr, val)
+        self.reset()
+        self.populateValue(data)
+        return self
+
+
     def valueBetween(self, attrName, minval, maxVal):
         """Get all data during which this attribute was between min and max val
 
