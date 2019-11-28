@@ -67,7 +67,7 @@ class Auth():
         if server_token:
             body['server-token'] = server_token
 
-        return self.call("introspect", body)
+        return self.call("token/introspect", body)
 
     def revoke_tokens(self, tokens):
         if type(tokens) is type([]):
@@ -75,7 +75,7 @@ class Auth():
         else:
             body = {'tokens': [tokens]}
 
-        return self.call("revoke", body)
+        return self.call("token/revoke", body)
 
     def revoke_token_hashes(self, token_hashes):
         if type(token_hashes) is type([]):
@@ -83,7 +83,11 @@ class Auth():
         else:
             body = {'token-hashes': [token_hashes]}
 
-        return self.call("revoke", body)
+        return self.call("token/revoke", body)
+
+    def revoke_all(self, serial, fingerprint):
+        body = {'serial':serial, 'fingerprint': fingerprint}
+        return self.call("token/revoke-all", body)
 
     def audit_tokens(self, hours):
         body = {'hours': hours}
