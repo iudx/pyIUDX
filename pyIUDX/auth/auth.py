@@ -85,6 +85,10 @@ class Auth():
 
         return self.call("token/revoke", body)
 
+    def revoke_all(self, serial, fingerprint):
+        body = {'serial':serial, 'fingerprint': fingerprint}
+        return self.call("token/revoke-all", body)
+
     def audit_tokens(self, hours):
         body = {'hours': hours}
         return self.call("audit/tokens", body)
