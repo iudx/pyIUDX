@@ -92,6 +92,8 @@ class ResourceServer():
             raise Warning("Too many requests")
         if resp.status_code == 401:
             raise Warning("Invalid credentials")
+        if resp.status_code == 416:
+            raise Warning("Query exceeds time limit")
         if resp.status_code == 200:
             return resp.json()
 
@@ -122,6 +124,8 @@ class ResourceServer():
             raise Warning("Too many requests")
         if resp.status_code == 401:
             raise Warning("Invalid credentials")
+        if resp.status_code == 416:
+            raise Warning("Query exceeds time limit \n" + json.dumps(resp.json()))
         if resp.status_code == 200:
             return resp.json()
 

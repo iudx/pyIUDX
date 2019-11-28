@@ -297,6 +297,8 @@ class Item(object):
     def populateValue(self, data):
         """Helper function to populate a QuantitativeProperty's value array
         """
+        if data is None:
+            return
         for row in data:
             """ TODO: Assuming a datetime format is bad """
             timeNoFloat = 0
