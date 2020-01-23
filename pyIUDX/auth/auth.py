@@ -11,7 +11,7 @@ class Auth():
         self.credentials = (certificate, key)
 
     def call(self, api, body=None):
-        ret = "success"
+        ret = True # success
         body = json.dumps(body)
         response = requests.post(
             url=self.url + "/" + api,
@@ -29,15 +29,15 @@ class Auth():
                 response.text
             )
 
-            ret = "failed"
+            ret = False # failed
 
         if response.headers['content-type'] == 'application/json':
-            return [ret, json.loads(response.text)]
+            return {'success':ret, 'response':json.loads(response.text)}
         else:
             sys.stderr.write(
                 "WARNING: auth did not send 'application/json'"
             )
-            return ["failed", None]
+            return {'success':False, 'response':None}
 
     def get_token(self, request, token_time=None, existing_token=None):
         body = {'request': request}
