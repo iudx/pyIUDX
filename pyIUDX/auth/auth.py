@@ -65,6 +65,12 @@ class Auth():
         body = {'token': token}
 
         if server_token:
+            if type(server_token) != type("string"):
+                sys.stderr.write(
+                    "ERROR: server-token should be a string"
+                )
+                return {'success':False, 'response':None}
+
             body['server-token'] = server_token
 
         return self.call("token/introspect", body)
