@@ -65,9 +65,9 @@ class Auth():
         body = {'token': token}
 
         if server_token:
-            if type(server_token) != type("string"):
+            if type(server_token) == type({}):
                 sys.stderr.write(
-                    "ERROR: server-token should be a string"
+                    "ERROR: server-token cannot be a dictonary"
                 )
                 return {'success':False, 'response':None}
 
