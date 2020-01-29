@@ -50,6 +50,9 @@ class Auth():
 
         return self.call("token", body)
 
+    def get_certificate_info(self):
+        return self.call("certificate-info")
+
     def get_policy(self):
         return self.call("acl")
 
