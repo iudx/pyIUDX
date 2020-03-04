@@ -11,7 +11,7 @@ Vist [the pune IUDX](https://pudx.catalogue.iudx.org.in) to get a glimpse of Pun
 
 ## Installation
 ```
-pip install git+https://github.com/iudx/pyIUDX
+pip install git+https://github.com/iudx/pyIUDX@v0.1.0
 ```
 
 ## IPython Example
