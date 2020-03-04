@@ -226,7 +226,7 @@ class Item(object):
     This class presents an abstraction layer combining both
     """
 
-    def __init__(self, catUrl, resourceItemId, dataModel=None):
+    def __init__(self, catUrl, rsUrl, resourceItemId, dataModel=None):
         """ PyIUDX item base class
         Args:
             catUrl (string): Domain name/ip of the catalogue server
@@ -234,7 +234,7 @@ class Item(object):
         self.id = resourceItemId
         self.cat = cat.Catalogue(catUrl)
         """ TODO: get rs from catalogue item """
-        self.rs = rs.ResourceServer("https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1")
+        self.rs = rs.ResourceServer(rsUrl)
         catItem = self.cat.getOneResourceItem(self.id)
         if catItem is None:
             raise RuntimeError("Item :" + self.id +
@@ -357,7 +357,11 @@ class Item(object):
         Returns:
             self (object): Returns back the updated object
         """
-        data = self.rs.getLatestData(self.id)
+        try:
+            data = self.rs.getLatestData(self.id)
+        except Exception as e:
+            data = None
+            pass
         self.reset()
         self.populateValue(data)
         return self
@@ -421,7 +425,7 @@ class Items(MutableSequence):
     coupled with multiprocessing pool to allow for faster data access
     """
 
-    def __init__(self, catUrl, items=None):
+    def __init__(self, catUrl, rsUrl, items=None):
         """ PyIUDX items base class
 
         Args:
@@ -430,6 +434,7 @@ class Items(MutableSequence):
         super(Items, self).__init__()
         self.list = Manager().list()
         self.catUrl = catUrl
+        self.rsUrl = rsUrl
         self.cat = cat.Catalogue(catUrl)
         if items is None:
             return
@@ -443,15 +448,15 @@ class Items(MutableSequence):
 
         """ Init items """
         with Pool(4) as p:
-            p.starmap(self.initItem, [(self.catUrl, item["id"], self.list) for item in items])
+            p.starmap(self.initItem, [(self.catUrl, self.rsUrl, item["id"], self.list) for item in items])
             p.close()
             p.join()
         self.list = list(self.list)
         self.len = len(self.list)
 
-    def initItem(self, catUrl, item, objList):
+    def initItem(self, catUrl, rsUrl, item, objList):
         """Multiprocessed job """
-        objList.append(Item(catUrl, item, self.dm))
+        objList.append(Item(catUrl, rsUrl, item, self.dm))
 
     def getLatest(self, obj):
         """Multiprocessed job """

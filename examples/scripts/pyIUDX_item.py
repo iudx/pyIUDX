@@ -22,7 +22,8 @@ itemList = [{"id": "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-res
 
 """Creating a new object element of type Items from rs of pyIUDX
 """
-element = item.Items("https://pudx.catalogue.iudx.org.in/catalogue/v1", items=itemList)
+element = item.Items("https://pudx.catalogue.iudx.org.in/catalogue/v1",
+                     "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1", items=itemList)
 
 """A python snippet to get quantitative Properties of the resource item or of the resource group(if the items in the list belong to the same resource group)
 """
