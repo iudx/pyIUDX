@@ -75,7 +75,6 @@ class QuantitativeProperty(object):
             e.g {"unitText": "ppm", "describes": "description of the property"]
         """
         self.name = name
-        self.value = np.empty((0, 2), dtype=object)
         for p in properties.keys():
             setattr(self, p, properties[p])
         self.attributes = copy.deepcopy(self.__dict__)
@@ -84,16 +83,16 @@ class QuantitativeProperty(object):
         self.attributes.pop("attributes", None)
         self.parent = obj
 
-    def reset(self):
+    def reset(self, num_time_indices):
         """Reset value of this Property
         """
-        self.value = np.empty((0, 2), dtype=object)
+        self.value = np.empty((0, num_time_indices+1), dtype=object)
         return
 
-    def sort(self):
+    def sort(self, updatedAtIdx):
         """Sort time series
         """
-        self.value = self.value[np.argsort(self.value[:, 0])]
+        self.value = self.value[np.argsort(self.value[:, updatedAtIdx])]
 
     def setValue(self, time, value):
         """Set Value for this Property
@@ -103,11 +102,13 @@ class QuantitativeProperty(object):
         """
         try:
             value = float(value)
+            arr = [t for t in time]
+            arr.append(value)
             self.value = np.append(self.value,
-                                   np.array([[time, value]], dtype=object),
+                                   np.array([arr], dtype=object),
                                    axis=0)
-        except:
-            pass
+        except Exception as e:
+            print(e)
         return
 
     def latest(self):
@@ -266,7 +267,10 @@ class Item(object):
                         Property(attr,
                                  self.dm["properties"][attr]))
 
-            if attrType == "TimeProperty":
+            """ Minor fix to include updated
+                TODO: make a general list of common_defs TimeProperties
+            """
+            if attrType == "TimeProperty" or attrType == "updatedAt":
                 self.timeProperties.append(attr)
 
             if attrType == "QuantitativeProperty":
@@ -282,7 +286,14 @@ class Item(object):
 
         """ TODO: What if multiple time attributes """
         """ Find time attribute from datamodel """
-        self.timeProperty = self.timeProperties[0]
+        for p in self.timeProperties:
+            if self.dm["properties"][p]["$ref"].split("/")[-1] == "updatedAt":
+                self.updatedAt = p
+            else:
+                self.updatedAt = self.timeProperties[0]
+        self.updatedAtIdx = self.timeProperties.index(self.updatedAt)
+        self.num_time_indices = len(self.timeProperties)
+
 
         """ Read item properties """
         for key in catItem.keys():
@@ -299,23 +310,21 @@ class Item(object):
         """
         if data is None:
             return
+        """ TODO: Assuming a datetime format is bad """
         for row in data:
-            """ TODO: Assuming a datetime format is bad """
-            timeNoFloat = 0
-            try:
-                timestamp = datetime.datetime\
-                                .strptime(row[self.timeProperty].split("+")[0],
-                                          "%Y-%m-%dT%H:%M:%S.%f")
-            except:
-                timeNoFloat = 1
-                pass
-            if timeNoFloat == 1:
-                try:
-                    timestamp = datetime.datetime\
-                                    .strptime(row[self.timeProperty].split("+")[0],
-                                              "%Y-%m-%dT%H:%M:%S")
-                except:
-                    continue
+            timestamp = []
+            for tp in self.timeProperties:
+                if tp in row.keys():
+                    try:
+                        timestamp.append(datetime.datetime\
+                                         .strptime(row[tp]\
+                                         .split("+")[0],
+                                         "%Y-%m-%dT%H:%M:%S.%f"))
+                    except:
+                        timestamp.append(datetime.datetime\
+                                         .strptime(row[tp]\
+                                         .split("+")[0],
+                                         "%Y-%m-%dT%H:%M:%S"))
 
             for k in row.keys():
                 if k in self.quantitativeProperties:
@@ -330,7 +339,7 @@ class Item(object):
 
         """Sort time series """
         for k in self.quantitativeProperties:
-            getattr(self, k).sort()
+            getattr(self, k).sort(self.updatedAtIdx)
         for k in self.geoProperties:
             pass
             #getattr(self, k).sort()
@@ -346,7 +355,7 @@ class Item(object):
             getattr(self, d).reset()
 
         for d in self.quantitativeProperties:
-            getattr(self, d).reset()
+            getattr(self, d).reset(self.num_time_indices)
 
         for d in self.geoProperties:
             getattr(self, d).reset()
