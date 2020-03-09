@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyIUDX',
-    version='0.0.1',
+    version='1.0.1',
     packages=find_packages(),
     install_requires=['requests', 'urllib3'],
     url='https://github.com/rbccps-iisc/pyIUDX',

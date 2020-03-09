@@ -10,6 +10,7 @@ class ItemsTest(unittest.TestCase):
     def setUpClass(self):
         self.catalogue = cat.Catalogue("https://pudx.catalogue.iudx.org.in/catalogue/v1")
         self.incidents = item.Item("https://pudx.catalogue.iudx.org.in/catalogue/v1",
+                                   "https://pudx.resourceserver.iudx.org.in/resource-server/pscdcl/v1",
                                    "rbccps.org/aa9d66a000d94a78895de8d4c0b3a67f3450e531/pudx-resource-server/tomtom/pune-traffic-incidents")
         print("====== Static =========")
         print(self.incidents.properties)
