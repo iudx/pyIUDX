@@ -16,8 +16,8 @@ class Item():
         """
         self.item_id = item_id
         """ TODO: Remove hardcoding later """
-        self._rsUrl = "https://" + item_id.split("/")[2] + "/resource-server/vscl/v1"
-        print(self._rsUrl)
+        self._rs_url = "https://" + item_id.split("/")[2] + "/resource-server/vscl/v1"
+        print(self._rs_url)
         self._cert = (cert, key)
         self._token = token
         self._opts = {}
@@ -27,12 +27,12 @@ class Item():
         # with open(opts_file, "r") as f:
         #     self.optsSchema = json.load(f)
 
-    def dispParams(self):
+    def disp_params(self):
         """ Display rs initalization parameter
         Returns:
-            (rsUrl) (string): version string
+            (rs_url) (string): version string
         """
-        return self._rsUrl
+        return self._rs_url
 
 
     def search(self, data):
@@ -40,7 +40,7 @@ class Item():
         Returns:
             resp (object): Response body
         """
-        url = self._rsUrl + "/search"
+        url = self._rs_url + "/search"
         headers = {"Content-Type": "application/json"}
         return requests.post(url, data=json.dumps(data),
                              headers=headers, cert=self._cert)
@@ -51,9 +51,9 @@ class Item():
         Returns:
             resp (object): Response body
         """
-        url = self._rsUrl + "/download"
+        url = self._rs_url + "/download"
         headers = {"Content-Type": "application/json"}
-        return requests.post(self._rsUrl, data=json.dumps(data),
+        return requests.post(self._rs_url, data=json.dumps(data),
                              headers=headers, cert=self._cert)
 
 
@@ -71,12 +71,12 @@ class Item():
         Returns:
             data (Dict): Output JSON data
         """
-        idDict = {"id": self.item_id}
+        id_dict = {"id": self.item_id}
         if self._token is not None:
-            tokenDict = {"token": self._token}
-            data = {**idDict, **self._opts, **tokenDict}
+            token_dict = {"token": self._token}
+            data = {**id_dict, **self._opts, **token_dict}
         else:
-            data = {**idDict, **self._opts}
+            data = {**id_dict, **self._opts}
         resp = self.search(data)
         if resp.status_code == 400:
             raise Warning("Bad request. Check query body")
@@ -99,12 +99,12 @@ class Item():
         self._opts = {**self._opts, **opts}
         return self
 
-    def during(self, startTime, endTime):
+    def during(self, start_time, end_time):
         """Get data during a time interval
 
         Args:
-            startTime (string): Starting from
-            endTime (string): Till
+            start_time (string): Starting from
+            end_time (string): Till
 
         TODO: 
             Validate time
@@ -112,8 +112,8 @@ class Item():
         Returns:
             self (Object):  self
         """
-        timeString = startTime + "/" + endTime
-        opts = {"TRelation": "during", "time": timeString}
+        time_string = start_time + "/" + end_time
+        opts = {"TRelation": "during", "time": time_string}
         self._opts = {**self._opts, **opts}
         return self
 
@@ -159,10 +159,10 @@ class Item():
         Returns:
             self (Object):  self
         """
-        timeString = startTime + "/" + endTime
+        time_string = start_time + "/" + end_time
         opts = {"lat": str(point[0]), "lon": str(point[1]),
                 "radius": str(radius), "TRelation": "during",
-                "time": timeString}
+                "time": time_string}
         self._opts = {**self._opts, **opts}
         return self
 
@@ -184,54 +184,54 @@ class Item():
         self._opts = {**self._opts, **opts}
         return self
 
-    def greater(self, attribute, minVal):
-        """Get data of an item for which an attribute is greater than minVal
+    def greater(self, attribute, min_val):
+        """Get data of an item for which an attribute is greater than min_val
 
         Args:
             id (string): id of the resource item
             attribute (string): attribute name
-            minVal (float): minimum value
+            min_val (float): minimum value
 
         Returns:
             self (Object):  self
         """
         opts = {"attribute-name": attribute,
-                "attribute-value": str(minVal),
+                "attribute-value": str(min_val),
                 "comparison-operator": "propertyisgreaterthanorequalto",
                 "options": "latest"}
         self._opts = {**self._opts, **opts}
         return self
 
-    def lesser(self, attribute, maxVal):
-        """Get data of an item for which an attribute is lesser than maxVal
+    def lesser(self, attribute, max_val):
+        """Get data of an item for which an attribute is lesser than max_val
 
         Args:
             attribute (string): attribute name
-            maxVal (float): maximum value
+            max_val (float): maximum value
 
         Returns:
             self (Object):  self
         """
         opts = {"attribute-name": attribute,
-                "attribute-value": str(maxVal),
+                "attribute-value": str(max_val),
                 "comparison-operator": "propertyislessthanorequalto",
                 "options": "latest"}
         self._opts = {**self._opts, **opts}
         return self
 
-    def between(self, attribute, minVal, maxVal):
-        """Get data of an item for which an attribute is between minVal and maxVal
+    def between(self, attribute, min_val, max_val):
+        """Get data of an item for which an attribute is between min_val and max_val
 
         Args:
             attribute (string): attribute name
-            minVal (float): minimum value
-            maxVal (float): maximum value
+            min_val (float): minimum value
+            max_val (float): maximum value
 
         Returns:
             self (Object):  self
         """
         opts = {"attribute-name": attribute,
-                "attribute-value": str(minVal) + "," + str(maxVal),
+                "attribute-value": str(min_val) + "," + str(max_val),
                 "comparison-operator": "propertyisbetween"}
         self._opts = {**self._opts, **opts}
         return self

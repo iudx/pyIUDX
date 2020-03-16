@@ -12,23 +12,24 @@ class Catalogue():
         Args:
             catUrl (string): catalogue url
         """
-        self.catUrl = catUrl
+        self._cat_url = catUrl
 
     def checkConnection(self):
-        connect = requests.get(self.catUrl)
+        connect = requests.get(self._cat_url)
         if connect.status_code != 200:
             raise RuntimeError("Couldn't connect to catalogue server")
 
-    def getAllItems(self):
+    def all(self):
         """ Get all catalogue items
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
+        TODO: Paginate
         """
-        url = self.catUrl + "/search"
+        url = self._cat_url + "/search"
         items = requests.get(url)
         return(items.json())
 
-    def makeOpts(self, attributes=None, filters=None, geo=None):
+    def make_opts(self, attributes=None, filters=None, geo=None):
         """Make attributes options string
         Args:
             attributes (Dict): Array of key value pairs
@@ -41,66 +42,66 @@ class Catalogue():
             opts (string): options as a string for a GET method
         """
         opts = ""
-        attrOpts = ""
-        attrKeys = []
-        attrValues = []
-        filterOpts = ""
-        geoOpts = ""
+        attr_opts = ""
+        attr_keys = []
+        attr_values = []
+        filter_opts = ""
+        geo_opts = ""
         if attributes is not None:
             for attr in attributes.keys():
-                attrKeys.append(attr)
-                attrValues.append(attributes[attr])
-            attrOpts = ("attribute-name=(" + ",".join(a for a in attrKeys) + ")&" +
+                attr_keys.append(attr)
+                attr_values.append(attributes[attr])
+            attr_opts = ("attribute-name=(" + ",".join(a for a in attr_keys) + ")&" +
                         "attribute-value=(" +
                         "".join(str(tuple(a)).replace("\'", "")
-                                for a in attrValues) + ")")
+                                for a in attr_values) + ")")
         if filters is not None:
-            filterOpts = ("attribute-filter=" +
+            filter_opts = ("attribute-filter=" +
                           str(tuple(filters)).replace("\'", ""))
 
         if geo is not None:
-            geoKeys = list(geo.keys())
-            if len(geoKeys) is not 1:
+            geo_keys = list(geo.keys())
+            if len(geo_keys) is not 1:
                 raise RuntimeError("Multiple Geo Options not supported")
-            geoKey = geoKeys[0]
+            geo_key = geo_keys[0]
 
             try:
-                if geoKey is "circle":
-                    geoOpts = ("lat=" + str(geo[geoKey]["lat"]) + "&" +
-                               "lon=" + str(geo[geoKey]["lon"]) + "&" +
-                               "radius=" + str(geo[geoKey]["radius"]))
+                if geo_key is "circle":
+                    geo_opts = ("lat=" + str(geo[geo_key]["lat"]) + "&" +
+                               "lon=" + str(geo[geo_key]["lon"]) + "&" +
+                               "radius=" + str(geo[geo_key]["radius"]))
 
-                if geoKey is "polygon":
-                    if geo[geoKey][0] != geo[geoKey][-1]:
+                if geo_key is "polygon":
+                    if geo[geo_key][0] != geo[geo_key][-1]:
                         raise RuntimeError("Last point not equal to first point")
-                    geoOpts = ("geometry=polygon(" +
+                    geo_opts = ("geometry=polygon(" +
                                ",".join(str(g[0]) + "," + str(g[1])
-                                        for g in geo[geoKey]) + ")" +
+                                        for g in geo[geo_key]) + ")" +
                                "&relation=within")
 
-                if geoKey is "bbox":
-                    if len(geo[geoKey]) != 2:
+                if geo_key is "bbox":
+                    if len(geo[geo_key]) != 2:
                         raise RuntimeError("Two points needed for bbox query")
-                    geoOpts = ("bbox=" +
+                    geo_opts = ("bbox=" +
                                ",".join(str(g[0]) + "," + str(g[1])
-                                        for g in geo[geoKey]) +
+                                        for g in geo[geo_key]) +
                                "&relation=within")
 
-                if geoKey is "line":
-                    geoOpts = ("geometry=linestring(" +
+                if geo_key is "line":
+                    geo_opts = ("geometry=linestring(" +
                                ",".join(str(g[0]) + "," + str(g[1])
-                                        for g in geo[geoKey]) + ")" +
+                                        for g in geo[geo_key]) + ")" +
                                "&relation=intersects")
 
             except Exception as e:
                 raise RuntimeError("Incorrect parameter given.\n", e)
 
-        opts = (attrOpts +
-                ("&" if attributes is not None else "") + filterOpts +
-                ("&" if filters is not None else "") + geoOpts)
+        opts = (attr_opts +
+                ("&" if attributes is not None else "") + filter_opts +
+                ("&" if filters is not None else "") + geo_opts)
         return opts
 
-    def getItemCount(self, attributes=None, filters=None, geo=None):
+    def count(self, attributes=None, filters=None, geo=None):
         """Number of items matching the criterion
         Args:
             attributes (Dict): Array of key value pairs
@@ -112,8 +113,8 @@ class Catalogue():
         Returns:
             count (int): number of items or -1 if fail
         """
-        url = self.catUrl + "/count"
-        opts = self.makeOpts(attributes, filters, geo)
+        url = self._cat_url + "/count"
+        opts = self.make_opts(attributes, filters, geo)
         url = url + "?" + opts
         count = requests.get(url)
         if count.status_code is 200:
@@ -121,40 +122,23 @@ class Catalogue():
         else:
             return -1
 
-    def getOneResourceItem(self, id, filters=None):
-        """Item given the id
-        Args:
-            id (string): ID of the resourceItem
-            filters (List[str]): Array of strings as filter opts
-                                     For e.x,
-                                     ["id", "provider"]
-        Returns:
-            item (Dict): A catalogue items (dicts)
-        """
-        url = self.catUrl + "/items" + "/" + id
-        opts = self.makeOpts(None, filters)
-        url = url + "?" + opts
-        item = requests.get(url)
-        if item.status_code is 200:
-            return item.json()[0]
-        else:
-            return {}
 
-    def getDataModel(self, id):
+    def get_data_model(self, item_id):
         """Get the data model for a given id
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        item = self.getOneResourceItem(id)
+        item = self.get(item_id)
         try:
             dm = requests.get(item["refDataModel"]["value"]).json()
         except:
             raise RuntimeError("Couldn't load data model")
         return(dm)
 
-    def getManyResourceItems(self, attributes=None, filters=None, geo=None):
-        """Items matching the criterion
+    def get(self, item_id=None, attributes=None, filters=None, geo=None):
+        """Items matching the criterion or single item if item_id is provided
         Args:
+            item_id (String): ID of the item
             attributes (Dict): Array of key value pairs
                                      For e.x,
                                      {"tags": ["a", "b"], "provider": ["c"]}
@@ -164,8 +148,18 @@ class Catalogue():
         Returns:
             list (List[Dict]): List  of catalogue items (dicts)
         """
-        url = self.catUrl + "/search"
-        opts = self.makeOpts(attributes, filters, geo)
+        if item_id is not None:
+            url = self._cat_url + "/items" + "/" + item_id
+            opts = self.make_opts(None, filters)
+            url = url + "?" + opts
+            item = requests.get(url)
+            if item.status_code is 200:
+                return item.json()[0]
+            else:
+                return {}
+
+        url = self._cat_url + "/search"
+        opts = self.make_opts(attributes, filters, geo)
         url = url + "?" + opts
         items = requests.get(url)
         if items.status_code is 200:
