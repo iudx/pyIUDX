@@ -1,8 +1,7 @@
 from multiprocessing import Pool, Manager
 from collections import MutableSequence
-from pyIUDX.rs import rs
-from pyIUDX.cat import cat
-from pyIUDX.auth import auth
+from pyIUDX.item import Item
+from pyIUDX.cat import Catalogue
 import numpy as np
 import datetime
 import requests
@@ -16,6 +15,15 @@ import copy
 """ TODO: Remove cat url in Item() """
 """ TODO: Error in case data is not coming """
 """ TODO: Item constructor can directly take catalogue entry """
+
+
+
+
+
+
+
+
+
 
 
 class Property(object):

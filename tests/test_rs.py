@@ -5,7 +5,7 @@ import unittest
 import sys
 import json
 sys.path.insert(1, '../pyIUDX')
-from pyIUDX.item import Item
+from pyIUDX.resource import Resource
 
 
 class RSTest(unittest.TestCase):
@@ -21,14 +21,14 @@ class RSTest(unittest.TestCase):
     def test_get_latest(self):
         latestArray = self.testVector["latest"]
         for item in latestArray:
-            data = Item(item).latest().get()
+            data = Resource(item).latest().get()
             print(data)
             self.assertTrue(data)
 
     def test_get_during(self):
         duringArray = self.testVector["during"]
         for item in duringArray:
-            data = Item(item["id"]).during(item["startTime"],
+            data = Resource(item["id"]).during(item["startTime"],
                                                   item["endTime"]).get()
             print(json.dumps(data, indent=4))
             self.assertTrue(data)
@@ -36,7 +36,7 @@ class RSTest(unittest.TestCase):
     def test_get_like_latest(self):
         like_array = self.testVector["likeLatest"]
         for item in like_array:
-            data = Item(item["id"]).latest().like(item["attributeName"],\
+            data = Resource(item["id"]).latest().like(item["attributeName"],\
                                                          item["attributeValue"])\
                                           .get()
             print(json.dumps(data, indent=4))
@@ -45,7 +45,7 @@ class RSTest(unittest.TestCase):
     def test_get_like_during(self):
         likeBetween_array = self.testVector["likeDuring"]
         for item in likeBetween_array:
-            data = Item(item["id"]).during(item["startTime"], item["endTime"])\
+            data = Resource(item["id"]).during(item["startTime"], item["endTime"])\
                                           .like(item["attributeName"],item["attributeValue"])\
                                           .get()
             print(json.dumps(data, indent=4))
