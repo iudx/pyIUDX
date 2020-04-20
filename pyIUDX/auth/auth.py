@@ -60,6 +60,9 @@ class Auth():
         body = {'policy': policy}
         return self.call("acl/set", body)
 
+    def revert_policy(self):
+        return self.call("acl/revert")
+
     def append_policy(self, policy):
         body = {'policy': policy}
         return self.call("acl/append", body)
